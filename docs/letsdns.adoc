@@ -1,0 +1,35 @@
+// vim:ts=4:sw=4:et:ft=asciidoc
+
+= LetsDNS: Manage DANE TLSA records
+:keywords: letsdns, dane, tlsa, dns
+:subject: LetsDNS: Manage DANE TLSA records in DNS servers
+:revnumber: 0.1.dev1
+:revdate: 2022-01-10
+:copyright: © 2022 Ralph Seichter
+:publisher: Ralph Seichter
+:lang: en
+:hyphens: en
+:encoding: UTF-8
+:pdf-version: 1.7
+:toc:
+:toclevels: 3
+:sectnums:
+:sectanchors:
+:pagenums:
+:icons: font
+:title-page:
+:media: print
+:source-highlighter: rouge
+:rouge-style: github
+:asciidoctor-diagram:
+
+== Copyright
+
+LetsDNS is Copyright © 2022 Ralph Seichter.
+LetsDNS is licensed under the GNU General Public License V3 or later.
+The project is https://gitlab.com/letsdns/letsdns/[hosted on GitLab].
+
+== Preface
+
+LetsDNS provides mechanisms to manage your DANE TLSA records in DNS servers.
+Records can be created based on a given set of TLS certificate files.
