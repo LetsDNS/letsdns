@@ -8,5 +8,6 @@ stages:
 - test
 sast:
   stage: test
+  when: manual
 include:
 - template: Security/SAST.gitlab-ci.yml
