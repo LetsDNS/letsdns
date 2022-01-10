@@ -45,12 +45,13 @@ def show_txt():
 
 
 def update_dyn(conf: ConfigParser):
-    nameserver = config.get(conf, 'nameserver')
-    with open('local/ddns-keys.json', 'r') as f:
+    keyfile = config.get(conf, 'keyfile')
+    with open(keyfile, 'r') as f:
         obj = json.load(f)
         keyring = dns.tsigkeyring.from_text(obj)
         update = Update(f'_acme-challenge.{domain}', keyring=keyring)
         update.replace('letsdns', 3, 'TXT', str(datetime.now()))
+        nameserver = config.get(conf, 'nameserver')
         r: UpdateMessage = dns.query.tcp(update, nameserver, timeout=5)
         print(r)
 
@@ -61,11 +62,11 @@ if __name__ == '__main__':
         fromfile_prefix_chars='@',
         prog='letsdns',
     )
-    parser.add_argument('--show-config', action='store_true', help='print effective configuration to stdout')
-    parser.add_argument('config', metavar='configfile', type=str, nargs='+')
+    parser.add_argument('--showconfig', action='store_true', help='print effective configuration to stdout')
+    parser.add_argument('configfile', type=str, nargs='+')
     args = parser.parse_args()
-    conf_global = config.from_files(args.config)
-    if args.show_config:
+    conf_global = config.from_files(args.configfile)
+    if args.showconfig:
         print(conf_global.write(sys.stdout))
     else:
         domain = conf_global.get('DEFAULT', 'domain')

@@ -18,6 +18,7 @@ from configparser import ExtendedInterpolation
 _DEFAULT_CONFIG = {
     'DEFAULT': {
         'domain': 'example.com.',
+        'keyfile': '/etc/letsdns/dnskeys.json',
         'nameserver': '127.0.0.1',
     }
 }
