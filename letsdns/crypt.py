@@ -12,10 +12,24 @@ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Publ
 You should have received a copy of the GNU General Public License along with LetsDNS. If not, see
 <https://www.gnu.org/licenses/>.
 """
-from cryptography import x509
+import hashlib
+
+from cryptography.hazmat.primitives.serialization import Encoding
+from cryptography.x509 import Certificate
+from cryptography.x509 import load_pem_x509_certificate
 
 
-def read_x509_cert(filename: str):
+def read_x509_cert(filename: str) -> Certificate:
     with open(filename, 'rb') as f:
-        c = x509.load_pem_x509_certificate(f.read())
-        print(c)
+        return load_pem_x509_certificate(f.read())
+
+
+def sha256_hexdigest(data) -> str:
+    _hash = hashlib.sha256()
+    _hash.update(data)
+    return _hash.hexdigest()
+
+
+def tlsa_data(certificate: Certificate) -> str:
+    data = certificate.public_bytes(Encoding.DER)
+    return f'3 1 1 {sha256_hexdigest(data)}'

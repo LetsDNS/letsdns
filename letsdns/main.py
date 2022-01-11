@@ -15,7 +15,6 @@ You should have received a copy of the GNU General Public License along with Let
 import json
 import sys
 from argparse import ArgumentParser
-from configparser import ConfigParser
 
 import dns.query
 import dns.tsigkeyring
@@ -30,17 +29,19 @@ from letsdns import HOMEPAGE
 from letsdns import IDENTIFIER
 from letsdns import VERSION
 from letsdns import config
+from letsdns.config import Configuration
 from letsdns.crypt import read_x509_cert
+from letsdns.crypt import tlsa_data
 
 
-def show_mx():
+def show_mx(domain: str) -> None:
     answers = resolve(domain, 'MX')
     a: MX
     for a in answers:
         print(f'{a.exchange} has preference {a.preference}')
 
 
-def show_tlsa():
+def show_tlsa(domain: str) -> None:
     answers = resolve(f'letsdns_tlsa._acme-challenge.{domain}', 'TLSA')
     a: TLSA
     for a in answers:
@@ -48,7 +49,7 @@ def show_tlsa():
         print(t)
 
 
-def show_txt():
+def show_txt(domain: str) -> None:
     answers = resolve(domain, 'TXT')
     a: TXT
     for a in answers:
@@ -56,17 +57,36 @@ def show_txt():
         print(t)
 
 
-def update_dyn(conf: ConfigParser):
-    keyfile = config.get(conf, 'keyfile')
+def update_dns(conf: Configuration, name: str, record_type: str, record_data: str) -> None:
+    domain = conf.get_mandatory('domain')
+    keyfile = conf.get_mandatory('keyfile')
+    ttl = int(conf.get_mandatory('ttl'))
     with open(keyfile, 'r') as f:
         obj = json.load(f)
         keyring = dns.tsigkeyring.from_text(obj)
         update = Update(f'_acme-challenge.{domain}', keyring=keyring)
-        update.replace('letsdns_tlsa', 3, 'TLSA',
-                       '3 0 1 07ce6be3d50e07c8f8a6a6562a4d0e85bb0e62ceda1501600e2d4df148ac9b68')
-        nameserver = config.get(conf, 'nameserver')
+        update.replace(name, ttl, record_type, record_data)
+        nameserver = conf.get_mandatory('nameserver')
         r: UpdateMessage = dns.query.tcp(update, nameserver, timeout=5)
         print(r)
+
+
+def update_tlsa(conf: Configuration) -> None:
+    filename = conf.get_mandatory('certificate')
+    certificate = read_x509_cert(filename)
+    data = tlsa_data(certificate)
+    update_dns(conf, 'letsdns_tlsa', 'TLSA', data)
+
+
+def traverse_sections(conf: Configuration) -> None:
+    for section in conf.parser.sections():
+        conf.active_section = section
+        print(section)
+        action = conf.get('action')
+        if 'tlsa' == action:
+            update_tlsa(conf)
+        elif action:
+            print(f'Ignoring unknown action: {action}')
 
 
 if __name__ == '__main__':
@@ -81,10 +101,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     conf_global = config.from_files(args.configfile)
     if args.showconfig:
-        print(conf_global.write(sys.stdout))
+        print(conf_global.parser.write(sys.stdout))
     else:
-        domain = conf_global.get('DEFAULT', 'domain')
-        print(domain)
-        read_x509_cert('local/cert.pem')
-        # update_dyn(conf_global)
-        # show_tlsa()
+        traverse_sections(conf_global)

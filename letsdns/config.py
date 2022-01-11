@@ -15,8 +15,9 @@ You should have received a copy of the GNU General Public License along with Let
 from configparser import ConfigParser
 from configparser import ExtendedInterpolation
 
-_DEFAULT_CONFIG = {
-    'DEFAULT': {
+DEFAULT_SECTION = 'DEFAULT'
+DEFAULT_CONFIG = {
+    DEFAULT_SECTION: {
         'domain': 'example.com.',
         'keyfile': '/etc/letsdns/dnskeys.json',
         'nameserver': '127.0.0.1',
@@ -24,12 +25,26 @@ _DEFAULT_CONFIG = {
 }
 
 
-def from_files(filenames) -> ConfigParser:
+class Configuration:
+    parser: ConfigParser
+    active_section: str
+
+    def __init__(self, parser: ConfigParser) -> None:
+        super().__init__()
+        self.parser = parser
+
+    def get(self, option: str, fallback=None) -> str:
+        return self.parser.get(self.active_section, option, fallback=fallback)
+
+    def get_mandatory(self, option: str) -> str:
+        return self.parser.get(self.active_section, option)
+
+    def get_domain(self) -> str:
+        return self.get_mandatory('domain')
+
+
+def from_files(filenames) -> Configuration:
     parser = ConfigParser(interpolation=ExtendedInterpolation())
-    parser.read_dict(_DEFAULT_CONFIG)
+    parser.read_dict(DEFAULT_CONFIG)
     parser.read(filenames, encoding='utf-8')
-    return parser
-
-
-def get(parser: ConfigParser, option: str, section='DEFAULT'):
-    return parser.get(section, option)
+    return Configuration(parser)
