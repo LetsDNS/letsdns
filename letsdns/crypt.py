@@ -20,16 +20,19 @@ from cryptography.x509 import load_pem_x509_certificate
 
 
 def read_x509_cert(filename: str) -> Certificate:
+    """Read x509 certificate from file."""
     with open(filename, 'rb') as f:
         return load_pem_x509_certificate(f.read())
 
 
 def sha256_hexdigest(data) -> str:
+    """Generate hexadecimal SHA256 hash for some data."""
     _hash = hashlib.sha256()
     _hash.update(data)
     return _hash.hexdigest()
 
 
 def tlsa_data(certificate: Certificate) -> str:
+    """Return TLSA record value for a certificate."""
     data = certificate.public_bytes(Encoding.DER)
     return f'3 1 1 {sha256_hexdigest(data)}'

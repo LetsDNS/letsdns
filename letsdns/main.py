@@ -58,6 +58,13 @@ def show_txt(domain: str) -> None:
 
 
 def update_dns(conf: Configuration, name: str, record_type: str, record_data: str) -> None:
+    """Update DNS record.
+
+    :param conf: Configuration object
+    :param name: Record name
+    :param record_type: Record type (e.g. A, TLSA, etc.)
+    :param record_data: Record data string
+    """
     domain = conf.get_mandatory('domain')
     keyfile = conf.get_mandatory('keyfile')
     ttl = int(conf.get_mandatory('ttl'))
@@ -72,6 +79,7 @@ def update_dns(conf: Configuration, name: str, record_type: str, record_data: st
 
 
 def update_tlsa(conf: Configuration) -> None:
+    """Update TLSA record."""
     filename = conf.get_mandatory('certificate')
     certificate = read_x509_cert(filename)
     data = tlsa_data(certificate)
@@ -79,6 +87,10 @@ def update_tlsa(conf: Configuration) -> None:
 
 
 def traverse_sections(conf: Configuration) -> None:
+    """Traverse the sections of a configuration object.
+
+    If sections define an 'action' option, process accordingly.
+    """
     for section in conf.parser.sections():
         conf.active_section = section
         print(section)
@@ -90,6 +102,7 @@ def traverse_sections(conf: Configuration) -> None:
 
 
 if __name__ == '__main__':
+    """Entry point."""
     parser = ArgumentParser(
         description=f'LetsDNS {VERSION} - Manage DANE TLSA records in DNS servers.',
         epilog=f'See {HOMEPAGE} for more information.',

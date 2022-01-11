@@ -26,24 +26,48 @@ DEFAULT_CONFIG = {
 
 
 class Configuration:
+    """Provide access to configuration data."""
     parser: ConfigParser
-    active_section: str
+    active_section: str  # The currently active configuration section
 
     def __init__(self, parser: ConfigParser) -> None:
+        """Create configuration object.
+
+        :param parser: Configuration parser.
+        """
         super().__init__()
         self.parser = parser
 
-    def get(self, option: str, fallback=None) -> str:
-        return self.parser.get(self.active_section, option, fallback=fallback)
+    def get(self, name: str, fallback=None) -> str:
+        """Return an optional configuration value or the specified fallback value.
 
-    def get_mandatory(self, option: str) -> str:
-        return self.parser.get(self.active_section, option)
+        :param name: Option name.
+        :param fallback: Returned if option is undefined.
+        """
+        return self.parser.get(self.active_section, name, fallback=fallback)
+
+    def get_mandatory(self, name: str) -> str:
+        """Return a mandatory configuration value.
+
+        Raise an exception if option value is undefined.
+
+        :param name: Option name.
+        """
+        return self.parser.get(self.active_section, name)
 
     def get_domain(self) -> str:
+        """Return the mandatory 'domain' configuration value.
+
+        Raise an exception if 'domain' is undefined.
+        """
         return self.get_mandatory('domain')
 
 
 def from_files(filenames) -> Configuration:
+    """Read configuration files.
+
+    :param filenames: String or list of strings.
+    """
     parser = ConfigParser(interpolation=ExtendedInterpolation())
     parser.read_dict(DEFAULT_CONFIG)
     parser.read(filenames, encoding='utf-8')
