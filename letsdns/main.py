@@ -30,6 +30,7 @@ from letsdns import HOMEPAGE
 from letsdns import IDENTIFIER
 from letsdns import VERSION
 from letsdns import config
+from letsdns.crypt import read_x509_cert
 
 
 def show_mx():
@@ -84,5 +85,6 @@ if __name__ == '__main__':
     else:
         domain = conf_global.get('DEFAULT', 'domain')
         print(domain)
-        update_dyn(conf_global)
-        show_tlsa()
+        read_x509_cert('local/cert.pem')
+        # update_dyn(conf_global)
+        # show_tlsa()

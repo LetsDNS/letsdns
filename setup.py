@@ -42,6 +42,7 @@ setuptools.setup(
         'Programming Language :: Python :: 3',
     ],
     install_requires=[
+        'cryptography>=36.0.1',
         'dnspython>=2.1.0',
     ],
     python_requires='>=3.7',
