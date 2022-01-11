@@ -12,6 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
+import sys
 from configparser import ConfigParser
 from configparser import ExtendedInterpolation
 
@@ -61,6 +62,13 @@ class Configuration:
         Raise an exception if 'domain' is undefined.
         """
         return self.get_mandatory('domain')
+
+    def dump(self, destination=sys.stdout) -> None:
+        """Dump configuration state into a file.
+
+        :param destination: File pointer.
+        """
+        self.parser.write(destination)
 
 
 def from_files(filenames) -> Configuration:

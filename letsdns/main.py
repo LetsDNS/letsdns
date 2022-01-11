@@ -13,7 +13,6 @@
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
 import json
-import sys
 from argparse import ArgumentParser
 
 import dns.query
@@ -78,7 +77,7 @@ def update_dns(conf: Configuration, name: str, record_type: str, record_data: st
         print(r)
 
 
-def update_tlsa(conf: Configuration) -> None:
+def action_tlsa(conf: Configuration) -> None:
     """Update TLSA record."""
     filename = conf.get_mandatory('certificate')
     certificate = read_x509_cert(filename)
@@ -96,7 +95,7 @@ def traverse_sections(conf: Configuration) -> None:
         print(section)
         action = conf.get('action')
         if 'tlsa' == action:
-            update_tlsa(conf)
+            action_tlsa(conf)
         elif action:
             print(f'Ignoring unknown action: {action}')
 
@@ -114,6 +113,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     conf_global = config.from_files(args.configfile)
     if args.showconfig:
-        print(conf_global.parser.write(sys.stdout))
+        conf_global.dump()
     else:
         traverse_sections(conf_global)
