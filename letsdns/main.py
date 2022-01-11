@@ -65,16 +65,19 @@ def update_dns(conf: Configuration, name: str, record_type: str, record_data: st
     :param record_data: Record data string
     """
     domain = conf.get_mandatory('domain')
-    keyfile = conf.get_mandatory('keyfile')
     ttl = int(conf.get_mandatory('ttl'))
-    with open(keyfile, 'r') as f:
-        obj = json.load(f)
-        keyring = dns.tsigkeyring.from_text(obj)
-        update = Update(f'_acme-challenge.{domain}', keyring=keyring)
-        update.replace(name, ttl, record_type, record_data)
-        nameserver = conf.get_mandatory('nameserver')
-        r: UpdateMessage = dns.query.tcp(update, nameserver, timeout=5)
-        print(r)
+    keyfile = conf.get('keyfile')
+    if keyfile:
+        with open(keyfile, 'r') as f:
+            obj = json.load(f)
+            keyring = dns.tsigkeyring.from_text(obj)
+    else:
+        keyring = None
+    update = Update(f'{domain}', keyring=keyring)
+    update.replace(name, ttl, record_type, record_data)
+    nameserver = conf.get_mandatory('nameserver')
+    r: UpdateMessage = dns.query.tcp(update, nameserver, timeout=5)
+    print(r)
 
 
 def action_tlsa(conf: Configuration) -> None:
