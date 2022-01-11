@@ -1,18 +1,17 @@
 # Configuration file for the Sphinx documentation builder.
-#
-# This file only contains a selection of the most common options. For a full
-# list see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
+# See https://www.sphinx-doc.org/en/master/usage/configuration.html for details.
 import os
 import sys
+
+from sphinx.application import Sphinx
 
 sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
 project = 'LetsDNS'
-copyright = '2022 Ralph Seichter'
-author = 'Ralph Seichter <r@letsdns.org>'
+project_copyright = '2022 Ralph Seichter'
+author = 'Ralph Seichter'
 
 # The short X.Y version
 version = '0.1'
