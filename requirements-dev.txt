@@ -1,3 +1,8 @@
+# Development requirements (software)
 setuptools
 twine
 wheel
+
+# Development requirements (documentation)
+livereload
+sphinx
