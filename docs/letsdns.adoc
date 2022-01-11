@@ -3,8 +3,8 @@
 = LetsDNS: Manage DANE TLSA records
 :keywords: letsdns, dane, tlsa, dns
 :subject: LetsDNS: Manage DANE TLSA records in DNS servers
-:revnumber: 0.1.dev1
-:revdate: 2022-01-10
+:revnumber: 0.1.dev2
+:revdate: 2022-01-11
 :copyright: © 2022 Ralph Seichter
 :publisher: Ralph Seichter
 :lang: en
