@@ -12,4 +12,6 @@ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Publ
 You should have received a copy of the GNU General Public License along with LetsDNS. If not, see
 <https://www.gnu.org/licenses/>.
 """
-VERSION = '0.1.dev1'
+HOMEPAGE = 'https://www.letsdns.org/'
+IDENTIFIER = 'letsdns'
+VERSION = '0.1.dev2'

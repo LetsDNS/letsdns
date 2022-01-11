@@ -26,6 +26,8 @@ from dns.resolver import resolve
 from dns.update import Update
 from dns.update import UpdateMessage
 
+from letsdns import HOMEPAGE
+from letsdns import IDENTIFIER
 from letsdns import VERSION
 from letsdns import config
 
@@ -59,9 +61,10 @@ def update_dyn(conf: ConfigParser):
 
 if __name__ == '__main__':
     parser = ArgumentParser(
-        description=f'LetsDNS {VERSION} - Manage DANE TLSA records in DNS servers',
+        description=f'LetsDNS {VERSION} - Manage DANE TLSA records in DNS servers.',
+        epilog=f'See {HOMEPAGE} for more information.',
         fromfile_prefix_chars='@',
-        prog='letsdns',
+        prog=IDENTIFIER,
     )
     parser.add_argument('--showconfig', action='store_true', help='print effective configuration to stdout')
     parser.add_argument('configfile', type=str, nargs='+')
