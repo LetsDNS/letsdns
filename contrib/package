@@ -12,6 +12,7 @@ function usage() {
 	local n="$(basename $0)"
 	cat >&2 <<EOT
 Usage: ${n} {clean | dist | docs}
+       ${n} push
        ${n} upload [repository]
        ${n} setver {version}
 EOT
@@ -39,6 +40,13 @@ function do_docs() {
 	popd >/dev/null
 }
 
+function do_push() {
+	local r
+	for r in $(git remote); do
+		git push ${r}
+	done
+}
+
 function do_upload() {
 	if [ $# -gt 0 ]; then
 		repo="$1"
@@ -64,10 +72,10 @@ function do_setver() {
 arg="$1"
 shift
 case "$arg" in
-	clean | docs)
+	clean|docs|push)
 		do_$arg
 		;;
-	dist | upload)
+	dist|upload)
 		source .venv/bin/activate
 		do_$arg "$@"
 		;;
