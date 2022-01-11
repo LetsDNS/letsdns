@@ -16,11 +16,11 @@ import json
 import sys
 from argparse import ArgumentParser
 from configparser import ConfigParser
-from datetime import datetime
 
 import dns.query
 import dns.tsigkeyring
 from dns.rdatatype import MX
+from dns.rdatatype import TLSA
 from dns.rdatatype import TXT
 from dns.resolver import resolve
 from dns.update import Update
@@ -39,6 +39,14 @@ def show_mx():
         print(f'{a.exchange} has preference {a.preference}')
 
 
+def show_tlsa():
+    answers = resolve(f'letsdns_tlsa._acme-challenge.{domain}', 'TLSA')
+    a: TLSA
+    for a in answers:
+        t: str = a.to_text()
+        print(t)
+
+
 def show_txt():
     answers = resolve(domain, 'TXT')
     a: TXT
@@ -53,7 +61,8 @@ def update_dyn(conf: ConfigParser):
         obj = json.load(f)
         keyring = dns.tsigkeyring.from_text(obj)
         update = Update(f'_acme-challenge.{domain}', keyring=keyring)
-        update.replace('letsdns', 3, 'TXT', str(datetime.now()))
+        update.replace('letsdns_tlsa', 3, 'TLSA',
+                       '3 0 1 07ce6be3d50e07c8f8a6a6562a4d0e85bb0e62ceda1501600e2d4df148ac9b68')
         nameserver = config.get(conf, 'nameserver')
         r: UpdateMessage = dns.query.tcp(update, nameserver, timeout=5)
         print(r)
@@ -75,6 +84,5 @@ if __name__ == '__main__':
     else:
         domain = conf_global.get('DEFAULT', 'domain')
         print(domain)
-        show_mx()
-        show_txt()
         update_dyn(conf_global)
+        show_tlsa()
