@@ -16,15 +16,6 @@ import sys
 from configparser import ConfigParser
 from configparser import ExtendedInterpolation
 
-DEFAULT_SECTION = 'DEFAULT'
-DEFAULT_CONFIG = {
-    DEFAULT_SECTION: {
-        'domain': 'example.com.',
-        'keyfile': '/etc/letsdns/dnskeys.json',
-        'nameserver': '127.0.0.1',
-    }
-}
-
 
 class Configuration:
     """Provide access to configuration data."""
@@ -77,6 +68,6 @@ def from_files(filenames) -> Configuration:
     :param filenames: String or list of strings.
     """
     parser = ConfigParser(interpolation=ExtendedInterpolation())
-    parser.read_dict(DEFAULT_CONFIG)
+    parser.read_dict({'DEFAULT': {'nameserver': '127.0.0.1'}})
     parser.read(filenames, encoding='utf-8')
     return Configuration(parser)
