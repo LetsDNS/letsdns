@@ -4,10 +4,10 @@ letsdns package
 Submodules
 ----------
 
-letsdns.config module
----------------------
+letsdns.conf module
+-------------------
 
-.. automodule:: letsdns.config
+.. automodule:: letsdns.conf
    :members:
    :no-undoc-members:
    :show-inheritance:

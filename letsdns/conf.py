@@ -17,33 +17,45 @@ from configparser import ConfigParser
 from configparser import ExtendedInterpolation
 
 
-class Configuration:
+class Config:
     """Provide access to configuration data."""
     parser: ConfigParser
     active_section: str  # The currently active configuration section
 
-    def __init__(self, parser: ConfigParser) -> None:
-        """Create configuration object.
+    def dump(self, destination=sys.stdout) -> None:
+        """Dump configuration state into a file.
 
-        :param parser: Configuration parser.
+        Args:
+            destination: File pointer.
         """
-        super().__init__()
-        self.parser = parser
+        self.parser.write(destination)
+
+    def init(self, filenames) -> None:
+        """Initialise object by loading configuration files from disk.
+        Nonexisting or unreadable files are silently ignored.
+
+        Args:
+            filenames: Either a single string or a list of strings.
+        """
+        self.parser = ConfigParser(interpolation=ExtendedInterpolation())
+        self.parser.read_dict({'DEFAULT': {'nameserver': '127.0.0.1'}})
+        self.parser.read(filenames, encoding='utf-8')
 
     def get(self, name: str, fallback=None) -> str:
         """Return an optional configuration value or the specified fallback value.
 
-        :param name: Option name.
-        :param fallback: Returned if option is undefined.
+        Args:
+            name: Option name.
+            fallback: Returned if option is undefined.
         """
         return self.parser.get(self.active_section, name, fallback=fallback)
 
     def get_mandatory(self, name: str) -> str:
         """Return a mandatory configuration value.
-
         Raise an exception if option value is undefined.
 
-        :param name: Option name.
+        Args:
+            name: Option name.
         """
         return self.parser.get(self.active_section, name)
 
@@ -53,21 +65,3 @@ class Configuration:
         Raise an exception if 'domain' is undefined.
         """
         return self.get_mandatory('domain')
-
-    def dump(self, destination=sys.stdout) -> None:
-        """Dump configuration state into a file.
-
-        :param destination: File pointer.
-        """
-        self.parser.write(destination)
-
-
-def from_files(filenames) -> Configuration:
-    """Read configuration files.
-
-    :param filenames: String or list of strings.
-    """
-    parser = ConfigParser(interpolation=ExtendedInterpolation())
-    parser.read_dict({'DEFAULT': {'nameserver': '127.0.0.1'}})
-    parser.read(filenames, encoding='utf-8')
-    return Configuration(parser)

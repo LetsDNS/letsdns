@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from livereload import Server
 from livereload import shell
 

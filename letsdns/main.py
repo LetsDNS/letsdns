@@ -27,8 +27,7 @@ from dns.update import UpdateMessage
 from letsdns import HOMEPAGE
 from letsdns import IDENTIFIER
 from letsdns import VERSION
-from letsdns import config
-from letsdns.config import Configuration
+from letsdns.conf import Config
 from letsdns.crypt import read_x509_cert
 from letsdns.crypt import tlsa_data
 
@@ -56,13 +55,14 @@ def show_txt(domain: str) -> None:
         print(t)
 
 
-def update_dns(conf: Configuration, name: str, record_type: str, record_data: str) -> None:
+def update_dns(conf: Config, name: str, record_type: str, record_data: str) -> None:
     """Update DNS record.
 
-    :param conf: Configuration object
-    :param name: Record name
-    :param record_type: Record type (e.g. A, TLSA, etc.)
-    :param record_data: Record data string
+    Args:
+        conf: Config object
+        name: Record name
+        record_type: Record type (e.g. A, TLSA, etc.)
+        record_data: Record data string
     """
     domain = conf.get_mandatory('domain')
     ttl = int(conf.get_mandatory('ttl'))
@@ -80,7 +80,7 @@ def update_dns(conf: Configuration, name: str, record_type: str, record_data: st
     print(r)
 
 
-def action_tlsa(conf: Configuration) -> None:
+def action_tlsa(conf: Config) -> None:
     """Update TLSA record."""
     filename = conf.get_mandatory('certificate')
     certificate = read_x509_cert(filename)
@@ -88,7 +88,7 @@ def action_tlsa(conf: Configuration) -> None:
     update_dns(conf, 'letsdns_tlsa', 'TLSA', data)
 
 
-def traverse_sections(conf: Configuration) -> None:
+def traverse_sections(conf: Config) -> None:
     """Traverse the sections of a configuration object.
 
     If sections define an 'action' option, process accordingly.
@@ -104,7 +104,6 @@ def traverse_sections(conf: Configuration) -> None:
 
 
 if __name__ == '__main__':
-    """Entry point."""
     parser = ArgumentParser(
         description=f'LetsDNS {VERSION} - Manage DANE TLSA records in DNS servers.',
         epilog=f'See {HOMEPAGE} for more information.',
@@ -114,8 +113,9 @@ if __name__ == '__main__':
     parser.add_argument('--showconfig', action='store_true', help='print effective configuration to stdout')
     parser.add_argument('configfile', type=str, nargs='+')
     args = parser.parse_args()
-    conf_global = config.from_files(args.configfile)
+    config = Config()
+    config.init(args.configfile)
     if args.showconfig:
-        conf_global.dump()
+        config.dump()
     else:
-        traverse_sections(conf_global)
+        traverse_sections(config)
