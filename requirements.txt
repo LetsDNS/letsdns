@@ -1,2 +1,12 @@
-cryptography>=36.0.1
-dnspython>=2.1.0
+# Runtime
+cryptography
+dnspython
+
+# Development (software)
+setuptools
+twine
+wheel
+
+# Development (documentation)
+livereload
+sphinx
