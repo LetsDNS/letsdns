@@ -1,4 +1,4 @@
-Configuration example
+Example configuration
 =====================
 
 .. literalinclude:: example.conf
