@@ -25,14 +25,15 @@ from tests import read_config
 class Test(TestCase):
     c: Config
 
-    def setUp(self) -> None:
-        super().setUp()
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
         basicConfig(
             datefmt='%Y-%m-%d %H:%M:%S',
             format='%(asctime)s %(levelname)s %(message)s',
             level=WARN
         )
-        self.c = read_config()
+        Test.c = read_config()
 
     def test_update_dns(self):
         self.c.active_section = 'tlsa'
