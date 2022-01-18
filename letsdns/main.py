@@ -12,36 +12,30 @@
 #
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
-import json
-import re
 from argparse import ArgumentParser
-from logging import DEBUG
+from logging import INFO
 from logging import basicConfig
 from logging import debug
-from logging import error
+from logging import info
+from logging import warning
 
-import dns.query
-import dns.tsigkeyring
 from dns.rdatatype import MX
 from dns.rdatatype import TLSA
 from dns.rdatatype import TXT
 from dns.resolver import resolve
-from dns.update import Update
-from dns.update import UpdateMessage
 
 from letsdns import HOMEPAGE
 from letsdns import IDENTIFIER
 from letsdns import VERSION
 from letsdns.conf import Config
-from letsdns.crypt import read_x509_cert
-from letsdns.crypt import tlsa_data
+from letsdns.tlsa import action_tlsa
 
 
 def show_mx(domain: str) -> None:
     answers = resolve(domain, 'MX')
     a: MX
     for a in answers:
-        print(f'{a.exchange} has preference {a.preference}')
+        info(f'{a.exchange} has preference {a.preference}')
 
 
 def show_tlsa(domain: str) -> None:
@@ -49,7 +43,7 @@ def show_tlsa(domain: str) -> None:
     a: TLSA
     for a in answers:
         t: str = a.to_text()
-        print(t)
+        info(t)
 
 
 def show_txt(domain: str) -> None:
@@ -57,51 +51,7 @@ def show_txt(domain: str) -> None:
     a: TXT
     for a in answers:
         t: str = a.to_text()
-        print(t)
-
-
-def update_dns(conf: Config, name: str, record_type: str, record_data: str) -> None:
-    """Update DNS record.
-
-    Args:
-        conf: Config object
-        name: Record name
-        record_type: Record type (e.g. A, TLSA, etc.)
-        record_data: Record data string
-    """
-    domain = conf.get_mandatory('domain')
-    ttl = int(conf.get_mandatory('ttl'))
-    keyfile = conf.get('keyfile')
-    if keyfile:
-        with open(keyfile, 'r') as f:
-            obj = json.load(f)
-            keyring = dns.tsigkeyring.from_text(obj)
-    else:
-        keyring = None
-    update = Update(f'{domain}', keyring=keyring)
-    update.replace(name, ttl, record_type, record_data)
-    nameserver = conf.get_mandatory('nameserver')
-    r: UpdateMessage = dns.query.tcp(update, nameserver, timeout=5)
-    print(r)
-
-
-def action_tlsa(conf: Config) -> None:
-    """Update TLSA record."""
-    path_re = re.compile(r'^(cert_\S+)_path$')
-    record_re = re.compile(r'^(\d)-(\d)-(\d)$')
-    for option in conf.options():
-        match = path_re.match(option)
-        if match:
-            debug(option)
-            filename = conf.get_mandatory(option)
-            debug(filename)
-            record = conf.get_mandatory(f'{match.group(1)}_record')
-            if record_re.match(record):
-                certificate = read_x509_cert(filename)
-                data = tlsa_data(certificate)
-                update_dns(conf, 'letsdns_tlsa', 'TLSA', data)
-            else:
-                error(f'Unsupported TLSA record "{record}"')
+        info(t)
 
 
 def traverse_sections(conf: Config) -> None:
@@ -111,19 +61,20 @@ def traverse_sections(conf: Config) -> None:
     """
     for section in conf.parser.sections():
         conf.active_section = section
-        print(section)
+        debug(f'section: {section}')
         action = conf.get('action')
         if 'tlsa' == action:
+            debug(f'action: {action}')
             action_tlsa(conf)
         elif action:
-            print(f'Ignoring unknown action: {action}')
+            warning(f'Ignoring unknown action: {action}')
 
 
 if __name__ == '__main__':
     basicConfig(
         datefmt='%Y-%m-%d %H:%M:%S',
         format='%(asctime)s %(levelname)s %(message)s',
-        level=DEBUG
+        level=INFO
     )
     parser = ArgumentParser(
         description=f'LetsDNS {VERSION} - Manage DANE TLSA records in DNS servers.',
