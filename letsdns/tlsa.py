@@ -47,9 +47,8 @@ def update_dns(conf: Config, name: str, record_type: str, record_data: str) -> i
         keyring = None
     update = Update(f'{domain}', keyring=keyring)
     update.replace(name, ttl, record_type, record_data)
-    nameserver = conf.get_mandatory('nameserver')
-    nameserver = socket.gethostbyname(nameserver)
-    r = dns.query.tcp(update, nameserver, timeout=5)
+    nameserver = socket.gethostbyname(conf.get_mandatory('nameserver'))
+    r = dns.query.tcp(update, nameserver, timeout=10)
     debug(r)
     return r.id
 
