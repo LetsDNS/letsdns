@@ -32,7 +32,13 @@ def sha256_hexdigest(data) -> str:
     return _hash.hexdigest()
 
 
-def tlsa_data(certificate: Certificate) -> str:
-    """Return TLSA record value for a certificate."""
+def tlsa_data(prefix: str, certificate: Certificate) -> str:
+    """Return TLSA record value for a certificate.
+
+    Args:
+        prefix: Prefix string, e.g. 3-1-1. All dashes will be replaced with whitespace.
+        certificate: x509 certificate.
+    """
+    p = prefix.replace('-', ' ')
     data = certificate.public_bytes(Encoding.DER)
-    return f'3 1 1 {sha256_hexdigest(data)}'
+    return f'{p} {sha256_hexdigest(data)}'

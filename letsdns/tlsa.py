@@ -66,7 +66,7 @@ def action_tlsa(conf: Config) -> None:
             record = conf.get_mandatory(f'{match.group(1)}_record')
             if record_re.match(record):
                 certificate = read_x509_cert(filename)
-                data = tlsa_data(certificate)
+                data = tlsa_data(record, certificate)
                 update_dns(conf, 'letsdns_tlsa', 'TLSA', data)
             else:
                 error(f'Unsupported TLSA record "{record}" in section "{conf.active_section}"')
