@@ -40,12 +40,12 @@ class Test(TestCase):
         id_ = update_dns(self.c, name='test', record_type='TXT', record_data='test')
         self.assertGreater(id_, 0)
 
-    def test_update_dns_bad_ttl(self):
+    def test_bad_ttl(self):
         self.c.active_section = 'bad_ttl'
         with self.assertRaises(ValueError):
             update_dns(self.c, name='test', record_type='TXT', record_data='test')
 
-    def test_update_dns_bad_ns(self):
+    def test_bad_nameserver(self):
         self.c.active_section = 'bad_ns'
         with self.assertRaises(socket.gaierror):
             update_dns(self.c, name='test', record_type='TXT', record_data='test')
