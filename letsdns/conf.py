@@ -15,6 +15,7 @@
 import sys
 from configparser import ConfigParser
 from configparser import ExtendedInterpolation
+from typing import List
 
 
 class Config:
@@ -65,3 +66,7 @@ class Config:
         Raise an exception if 'domain' is undefined.
         """
         return self.get_mandatory('domain')
+
+    def options(self) -> List[str]:
+        """Return all options in the active section."""
+        return self.parser.options(self.active_section)

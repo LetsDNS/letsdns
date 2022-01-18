@@ -13,7 +13,12 @@
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
 import json
+import re
 from argparse import ArgumentParser
+from logging import DEBUG
+from logging import basicConfig
+from logging import debug
+from logging import error
 
 import dns.query
 import dns.tsigkeyring
@@ -82,10 +87,21 @@ def update_dns(conf: Config, name: str, record_type: str, record_data: str) -> N
 
 def action_tlsa(conf: Config) -> None:
     """Update TLSA record."""
-    filename = conf.get_mandatory('certificate')
-    certificate = read_x509_cert(filename)
-    data = tlsa_data(certificate)
-    update_dns(conf, 'letsdns_tlsa', 'TLSA', data)
+    path_re = re.compile(r'^(cert_\S+)_path$')
+    record_re = re.compile(r'^(\d)-(\d)-(\d)$')
+    for option in conf.options():
+        match = path_re.match(option)
+        if match:
+            debug(option)
+            filename = conf.get_mandatory(option)
+            debug(filename)
+            record = conf.get_mandatory(f'{match.group(1)}_record')
+            if record_re.match(record):
+                certificate = read_x509_cert(filename)
+                data = tlsa_data(certificate)
+                update_dns(conf, 'letsdns_tlsa', 'TLSA', data)
+            else:
+                error(f'Unsupported TLSA record "{record}"')
 
 
 def traverse_sections(conf: Config) -> None:
@@ -104,6 +120,11 @@ def traverse_sections(conf: Config) -> None:
 
 
 if __name__ == '__main__':
+    basicConfig(
+        datefmt='%Y-%m-%d %H:%M:%S',
+        format='%(asctime)s %(levelname)s %(message)s',
+        level=DEBUG
+    )
     parser = ArgumentParser(
         description=f'LetsDNS {VERSION} - Manage DANE TLSA records in DNS servers.',
         epilog=f'See {HOMEPAGE} for more information.',
