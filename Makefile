@@ -1,6 +1,8 @@
+# vim:ts=8:sw=8:noet
+
 PKG = contrib/package
 
-.PHONY:	clean dist docs usage
+.PHONY:	clean dist docs push usage
 
 usage:
 	@echo >&2 "Usage: make {clean | dist | docs | push}"
@@ -16,4 +18,4 @@ docs:
 	$(PKG) docs
 
 push:
-	$(PKG) push
+	@for r in $(shell git remote); do git push $$r; done
