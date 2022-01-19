@@ -3,6 +3,7 @@ cryptography
 dnspython
 
 # Software development
+coverage
 setuptools
 twine
 wheel
