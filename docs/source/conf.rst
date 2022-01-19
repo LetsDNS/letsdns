@@ -1,4 +1,4 @@
-Configuration options:
+Configuration options
 =====================
 
 Configuration data is specified using ``name = value`` pairs in

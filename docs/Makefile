@@ -2,8 +2,8 @@
 
 SPHINX_BUILD	?= PYTHONPATH=.. sphinx-build
 SPHINX_OPTS	?=
-SOURCE_DIR	= _source
-OUTPUT_DIR	= _build
+SOURCE_DIR	= source
+OUTPUT_DIR	= build
 
 .PHONY:	apidoc help Makefile
 
