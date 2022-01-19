@@ -4,18 +4,18 @@ letsdns package
 Submodules
 ----------
 
-letsdns.conf module
--------------------
+letsdns.configuration module
+----------------------------
 
-.. automodule:: letsdns.conf
+.. automodule:: letsdns.configuration
    :members:
    :no-undoc-members:
    :show-inheritance:
 
-letsdns.crypt module
---------------------
+letsdns.crypto module
+---------------------
 
-.. automodule:: letsdns.crypt
+.. automodule:: letsdns.crypto
    :members:
    :no-undoc-members:
    :show-inheritance:

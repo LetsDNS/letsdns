@@ -1,14 +1,19 @@
 # vim:ts=8:sw=8:noet
 
-SPHINX_BUILD	?= PYTHONPATH=.. sphinx-build
+SPHINX_BUILD	?= env PYTHONPATH=.. sphinx-build
 SPHINX_OPTS	?=
 SOURCE_DIR	= source
 OUTPUT_DIR	= build
 
-.PHONY:	apidoc help Makefile
+.PHONY:	apidoc cibuild help Makefile requirements
 
 help:
 	$(SPHINX_BUILD) -M help $(SOURCE_DIR) $(OUTPUT_DIR) $(SPHINX_OPTS)
+
+cibuild:	requirements apidoc html
+	
+requirements:
+	pip install -r ../requirements.txt
 
 apidoc:
 	sphinx-apidoc --force --output-dir $(SOURCE_DIR) ../letsdns
