@@ -3,11 +3,11 @@
 image: sphinxdoc/sphinx
 
 stages:
+- build
 - test
-- sphinx
 
 pages:
-  stage: sphinx
+  stage: build
   when: manual
   script:
     - make -C docs cibuild

@@ -11,7 +11,7 @@ help:
 	$(SPHINX_BUILD) -M help $(SOURCE_DIR) $(OUTPUT_DIR) $(SPHINX_OPTS)
 
 cibuild:	requirements apidoc html
-	
+
 requirements:
 	pip install -r ../requirements.txt
 
