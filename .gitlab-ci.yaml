@@ -22,7 +22,7 @@ pythontests:
   before_script:
     - pip install -r requirements.txt
   script:
-    - make -C tests
+    - make -C tests --warn-undefined-variables UNITTEST_CONF="$UNITTEST_CONF"
 
 sast:
   stage: test
