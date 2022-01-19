@@ -15,7 +15,8 @@ dist:
 	$(PKG) dist
 
 docs:
-	$(PKG) docs
+	# Sphinx requires an active Python venv
+	make -C docs apidoc html
 
 push:
 	@for r in $(shell git remote); do git push $$r; done
