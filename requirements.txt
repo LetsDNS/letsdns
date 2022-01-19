@@ -2,11 +2,7 @@
 cryptography
 dnspython
 
-# Development (software)
+# Software development
 setuptools
 twine
 wheel
-
-# Development (documentation)
-livereload
-sphinx
