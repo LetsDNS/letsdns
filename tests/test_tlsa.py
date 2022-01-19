@@ -17,14 +17,14 @@ import socket
 from logging import WARN
 from logging import basicConfig
 from unittest import TestCase
-from unittest import skipIf
+from unittest import skipUnless
 
 from letsdns.configuration import Config
 from letsdns.configuration import is_truthy
 from letsdns.tlsa import update_dns
 from tests import read_config
 
-SKIP_ONLINE_TESTS = is_truthy(os.environ.get('SKIP_ONLINE_TESTS'))
+ENABLE_ONLINE_TESTS = is_truthy(os.environ.get('ENABLE_ONLINE_TESTS'))
 
 
 class Test(TestCase):
@@ -40,7 +40,7 @@ class Test(TestCase):
         )
         Test.c = read_config()
 
-    @skipIf(SKIP_ONLINE_TESTS, 'Online tests disabled')
+    @skipUnless(ENABLE_ONLINE_TESTS, 'online tests disabled')
     def test_update_dns(self):
         self.c.active_section = 'tlsa'
         id_ = update_dns(self.c, name='test', record_type='TXT', record_data='test')
