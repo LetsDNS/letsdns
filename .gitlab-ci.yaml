@@ -1,11 +1,21 @@
-# You can override the included template(s) by including variable overrides
-# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
-# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
-# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
-# Note that environment variables can be set in several places
-# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
+# vim:ts=2:sw=2:et
+
+image: sphinxdoc/sphinx
+
 stages:
 - test
+- sphinx
+
+pages:
+  stage: sphinx
+  when: manual
+  script:
+    - make -C docs cibuild
+    - cp -r docs/build/html public
+  artifacts:
+    paths:
+      - public
+
 sast:
   stage: test
   when: manual
