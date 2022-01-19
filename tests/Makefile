@@ -1,13 +1,20 @@
 # vim:ts=8:sw=8:noet
 
-UNITTEST_CONF		?= ../local/devtest.conf
+COVERAGE_DIR		?= ../local/coverage
 SKIP_ONLINE_TESTS	?= no
+UNITTEST_CONF		?= ../local/devtest.conf
 
-.PHONY:	coverage run-tests
+ENV_VARS		= env PYTHONPATH=.. SKIP_ONLINE_TESTS=$(SKIP_ONLINE_TESTS) UNITTEST_CONF=$(UNITTEST_CONF)
+
+.PHONY:	coverage coverage-html run-tests
 
 run-tests:
-	env PYTHONPATH=.. SKIP_ONLINE_TESTS=$(SKIP_ONLINE_TESTS) UNITTEST_CONF=$(UNITTEST_CONF) python -m unittest discover -v
+	$(ENV_VARS) python -m unittest discover -v
 
 coverage:
-	env PYTHONPATH=.. SKIP_ONLINE_TESTS=$(SKIP_ONLINE_TESTS) UNITTEST_CONF=$(UNITTEST_CONF) coverage run -m unittest discover
+	$(ENV_VARS) coverage run -m unittest discover
 	coverage report
+
+coverage-html:	coverage
+	coverage html -d $(COVERAGE_DIR) --skip-empty --no-skip-covered
+	open $(COVERAGE_DIR)/index.html
