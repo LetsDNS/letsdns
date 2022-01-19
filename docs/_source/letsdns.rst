@@ -28,6 +28,14 @@ letsdns.main module
    :no-undoc-members:
    :show-inheritance:
 
+letsdns.tlsa module
+-------------------
+
+.. automodule:: letsdns.tlsa
+   :members:
+   :no-undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 
