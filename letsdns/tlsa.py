@@ -22,9 +22,9 @@ import dns.query
 import dns.tsigkeyring
 from dns.update import Update
 
-from letsdns.conf import Config
-from letsdns.crypt import dane_tlsa_data
-from letsdns.crypt import read_x509_cert
+from letsdns.configuration import Config
+from letsdns.crypto import dane_tlsa_data
+from letsdns.crypto import read_x509_cert
 
 
 def update_dns(conf: Config, name: str, record_type: str, record_data: str) -> int:

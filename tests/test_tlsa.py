@@ -17,7 +17,7 @@ from logging import WARN
 from logging import basicConfig
 from unittest import TestCase
 
-from letsdns.conf import Config
+from letsdns.configuration import Config
 from letsdns.tlsa import update_dns
 from tests import read_config
 

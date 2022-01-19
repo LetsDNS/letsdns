@@ -16,7 +16,7 @@ If not, see <https://www.gnu.org/licenses/>.
 """
 from os import environ
 
-from letsdns.conf import Config
+from letsdns.configuration import Config
 
 
 def read_config(active_section: str = 'DEFAULT') -> Config:

@@ -27,7 +27,7 @@ from dns.resolver import resolve
 from letsdns import HOMEPAGE
 from letsdns import IDENTIFIER
 from letsdns import VERSION
-from letsdns.conf import Config
+from letsdns.configuration import Config
 from letsdns.tlsa import action_dane_tlsa
 
 
