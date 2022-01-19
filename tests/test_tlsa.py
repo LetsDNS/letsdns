@@ -14,32 +14,16 @@
 # If not, see <https://www.gnu.org/licenses/>.
 import os
 import socket
-from logging import WARN
-from logging import basicConfig
-from unittest import TestCase
 from unittest import skipUnless
 
-from letsdns.configuration import Config
+import tests
 from letsdns.configuration import is_truthy
 from letsdns.tlsa import update_dns
-from tests import read_config
 
 ENABLE_ONLINE_TESTS = is_truthy(os.environ.get('ENABLE_ONLINE_TESTS'))
 
 
-class Test(TestCase):
-    c: Config
-
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-        basicConfig(
-            datefmt='%Y-%m-%d %H:%M:%S',
-            format='%(asctime)s %(levelname)s %(message)s',
-            level=WARN
-        )
-        Test.c = read_config()
-
+class Test(tests.TestCase):
     @skipUnless(ENABLE_ONLINE_TESTS, 'online tests disabled')
     def test_update_dns(self):
         self.c.active_section = 'tlsa'
