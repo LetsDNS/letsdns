@@ -51,7 +51,7 @@ class Config:
         """
         self.parser.write(destination)
 
-    def init(self, filenames) -> None:
+    def init(self, filenames=None) -> None:
         """Initialise object by loading configuration files from disk.
         Nonexisting or unreadable files are silently ignored.
 
@@ -60,7 +60,8 @@ class Config:
         """
         self.parser = ConfigParser(interpolation=ExtendedInterpolation())
         self.parser.read_dict({'DEFAULT': {'nameserver': '127.0.0.1'}})
-        self.parser.read(filenames, encoding='utf-8')
+        if filenames:
+            self.parser.read(filenames, encoding='utf-8')
 
     def get(self, name: str, fallback=None) -> str:
         """Return an optional configuration value or the specified fallback value.
