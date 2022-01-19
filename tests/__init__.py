@@ -14,6 +14,9 @@ General Public License for more details.
 You should have received a copy of the GNU General Public License along with LetsDNS.
 If not, see <https://www.gnu.org/licenses/>.
 """
+import unittest
+from logging import WARN
+from logging import basicConfig
 from os import environ
 
 from letsdns.configuration import Config
@@ -28,3 +31,17 @@ def read_config(active_section: str = 'DEFAULT') -> Config:
     conf.init(path)
     conf.active_section = active_section
     return conf
+
+
+class TestCase(unittest.TestCase):
+    c: Config
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        basicConfig(
+            datefmt='%Y-%m-%d %H:%M:%S',
+            format='%(asctime)s %(levelname)s %(message)s',
+            level=WARN
+        )
+        TestCase.c = read_config()
