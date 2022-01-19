@@ -3,9 +3,10 @@
 Welcome to LetsDNS
 ==================
 
-Manage DANE TLSA records in DNS servers.
+Manage DANE TLSA records in DNS servers. Supports multiple domains
+with multiple TLS certificates each.
 
-Copyright © 2022 Ralph Seichter. Licensed under GNU General Public License V3.
+Copyright © 2022 Ralph Seichter.
 
 .. toctree::
     :maxdepth: 3
@@ -15,6 +16,7 @@ Copyright © 2022 Ralph Seichter. Licensed under GNU General Public License V3.
     exampleconf
 
     letsdns
+    license
 
 
 Indices and tables

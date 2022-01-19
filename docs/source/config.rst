@@ -47,8 +47,8 @@ prefixes.
 
 - nameserver = *hostname | ip-address*
 
-  Hostname or IP address for your nameserver. LetsDNS will perform a
-  DNS lookup if necessary.
+  Host name or IP address for your nameserver. Name resolution is
+  delegated to your OS.
 
 - ttl = *seconds*
 
