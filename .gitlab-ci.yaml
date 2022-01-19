@@ -1,12 +1,11 @@
 # vim:ts=2:sw=2:et
 
-image: sphinxdoc/sphinx
-
 stages:
 - build
 - test
 
 pages:
+  image: sphinxdoc/sphinx
   stage: build
   when: manual
   script:
@@ -15,6 +14,15 @@ pages:
   artifacts:
     paths:
       - public
+
+pythontests:
+  image: python:3.7
+  stage: test
+  when: manual
+  before_script:
+    - pip install -r requirements.txt
+  script:
+    - make -C tests
 
 sast:
   stage: test
