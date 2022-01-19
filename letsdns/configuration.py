@@ -18,6 +18,26 @@ from configparser import ExtendedInterpolation
 from typing import List
 
 
+def is_truthy(something) -> bool:
+    """Test if 'something' represents boolean True.
+
+    An object represents True if it is (or can be converted to) a string and said
+    string's first character, converted to lowercase, is one of: 1, t, y.
+
+    Args:
+        something: The object to examine.
+    """
+    if not something:
+        return False
+    if isinstance(something, str):
+        s = something
+    else:
+        s = str(something)
+    f = s[:1].lower()
+    t = '1ty'.find(f)
+    return t >= 0
+
+
 class Config:
     """Provide access to configuration data."""
     parser: ConfigParser
