@@ -22,7 +22,7 @@ from letsdns.configuration import Config
 def read_config(active_section: str = 'DEFAULT') -> Config:
     name = 'UNITTEST_CONF'
     path = environ.get(name)
-    if path is None:
+    if path is None:  # pragma: no cover
         raise ValueError(f'Missing environment variable {name}')
     conf = Config()
     conf.init(path)
