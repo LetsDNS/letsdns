@@ -2,23 +2,24 @@
 
 SPHINX_BUILD	?= env PYTHONPATH=.. sphinx-build
 SPHINX_OPTS	?=
-SOURCE_DIR	= source
-OUTPUT_DIR	= build
+SPHINX_SOURCE	= source
+SPHINX_DEST	= build
 
-.PHONY:	apidoc cibuild help Makefile requirements
+.PHONY:	Makefile apidoc cibuild help install-reqs
 
 help:
-	$(SPHINX_BUILD) -M help $(SOURCE_DIR) $(OUTPUT_DIR) $(SPHINX_OPTS)
-
-cibuild:	requirements apidoc html
-
-requirements:
-	pip install -r ../requirements.txt
+	$(SPHINX_BUILD) -M help $(SPHINX_SOURCE) $(SPHINX_DEST) $(SPHINX_OPTS)
 
 apidoc:
-	sphinx-apidoc --force --output-dir $(SOURCE_DIR) ../letsdns
-	rm $(SOURCE_DIR)/modules.rst
-	sed -i'' -E -e 's/:(undoc-members:)/:no-\1/g' $(SOURCE_DIR)/*.rst
+	sphinx-apidoc --force --output-dir $(SPHINX_SOURCE) ../letsdns
+	rm $(SPHINX_SOURCE)/modules.rst
+	sed -i'' -E -e 's/:(undoc-members:)/:no-\1/g' $(SPHINX_SOURCE)/*.rst
+
+cibuild:	install-reqs apidoc html
+
+install-reqs:
+	pip install -r ../requirements.txt
+
 
 %:	Makefile
-	$(SPHINX_BUILD) -M $@ $(SOURCE_DIR) $(OUTPUT_DIR) $(SPHINX_OPTS)
+	$(SPHINX_BUILD) -M $@ $(SPHINX_SOURCE) $(SPHINX_DEST) $(SPHINX_OPTS)
