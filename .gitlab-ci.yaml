@@ -15,14 +15,14 @@ pages:
     paths:
       - public
 
-pythontests:
+python-tests:
   image: python:3.7
   stage: test
   when: manual
   before_script:
     - pip install -r requirements.txt
   script:
-    - make -C tests --warn-undefined-variables UNITTEST_CONF="$UNITTEST_CONF"
+    - make -C tests --warn-undefined-variables
 
 sast:
   stage: test
