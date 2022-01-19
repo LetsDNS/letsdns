@@ -32,7 +32,7 @@ def sha256_hexdigest(data) -> str:
     return _hash.hexdigest()
 
 
-def tlsa_data(prefix: str, certificate: Certificate) -> str:
+def dane_tlsa_data(prefix: str, certificate: Certificate) -> str:
     """Return TLSA record value for a certificate.
 
     Args:

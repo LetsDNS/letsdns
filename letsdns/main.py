@@ -28,7 +28,7 @@ from letsdns import HOMEPAGE
 from letsdns import IDENTIFIER
 from letsdns import VERSION
 from letsdns.conf import Config
-from letsdns.tlsa import action_tlsa
+from letsdns.tlsa import action_dane_tlsa
 
 
 def show_mx(domain: str) -> None:
@@ -63,9 +63,9 @@ def traverse_sections(conf: Config) -> None:
         conf.active_section = section
         debug(f'section: {section}')
         action = conf.get('action')
-        if 'tlsa' == action:
+        if 'dane-tlsa' == action:
             debug(f'action: {action}')
-            action_tlsa(conf)
+            action_dane_tlsa(conf)
         elif action:
             warning(f'Ignoring unknown action: {action}')
 

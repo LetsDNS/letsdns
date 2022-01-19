@@ -16,9 +16,9 @@ prefixes.
 
   One of the following identifiers must be specified:
 
-  - tlsa
+  - dane-tlsa
 
-    Create a TLSA records for the certificates defined in a
+    Create DANE TLSA records for the certificates defined in a
     configuration section.
 
 - cert_XYZ_path = */path/to/cert.pem*
