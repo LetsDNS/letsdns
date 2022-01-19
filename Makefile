@@ -1,11 +1,11 @@
 # vim:ts=8:sw=8:noet
 
-PKG = contrib/package
+PKG	= scripts/package
 
-.PHONY:	clean dist docs push usage
+.PHONY:	clean dist push usage
 
 usage:
-	@echo >&2 "Usage: make {clean | dist | docs | push}"
+	@echo >&2 "Usage: make {clean | dist | push}"
 	@exit 1
 
 clean:
@@ -13,10 +13,6 @@ clean:
 
 dist:
 	$(PKG) dist
-
-docs:
-	# Sphinx requires an active Python venv
-	make -C docs apidoc html
 
 push:
 	@for r in $(shell git remote); do git push $$r; done
