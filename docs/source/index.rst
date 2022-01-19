@@ -11,8 +11,9 @@ Copyright © 2022 Ralph Seichter. Licensed under GNU General Public License V3.
     :maxdepth: 3
     :caption: Contents:
 
-    conf
+    config
     exampleconf
+
     letsdns
 
 
