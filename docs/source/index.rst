@@ -13,7 +13,7 @@ Copyright © 2022 Ralph Seichter.
     :caption: Contents:
 
     config
-    exampleconf
+    example
 
     letsdns
     license
