@@ -48,7 +48,9 @@ def update_dns(conf: Config, name: str, dataset: Rdataset) -> int:
     else:
         keyring = None
     message = UpdateMessage(zone=zone, keyring=keyring)
-    message.replace(name, dataset)
+    message.delete(name)
+    if len(dataset) > 0:
+        message.replace(name, dataset)
     nameserver = socket.gethostbyname(conf.get_mandatory('nameserver'))
     response = dns.query.tcp(message, nameserver, timeout=10)
     debug(response)
@@ -60,7 +62,7 @@ def action_dane_tlsa(conf: Config) -> None:
     path_re = re.compile(r'^(cert_\S+)_path$')
     record_re = re.compile(r'^(\d)-(\d)-(\d)$')
     ttl = int(conf.get_mandatory('ttl'))
-    tlsa_list = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=ttl)
+    dataset = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=ttl)
     for option in conf.options():
         match = path_re.match(option)
         if match:
@@ -72,8 +74,8 @@ def action_dane_tlsa(conf: Config) -> None:
                 certificate = read_x509_cert(filename)
                 tlsa = dane_tlsa_data(record, certificate)
                 rdata = from_text(RdataClass.IN, RdataType.TLSA, tlsa)
-                tlsa_list.add(rdata)
+                dataset.add(rdata)
             else:
                 error(f'Unsupported TLSA record "{record}" in section "{conf.active_section}"')
-    if len(tlsa_list) > 0:
-        update_dns(conf, '_25._tcp', tlsa_list)
+    if len(dataset) > 0:
+        update_dns(conf, '_25._tcp', dataset)
