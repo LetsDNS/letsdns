@@ -14,7 +14,13 @@
 # If not, see <https://www.gnu.org/licenses/>.
 import os
 import socket
+import struct
 from unittest import skipUnless
+
+from dns.rdata import from_text
+from dns.rdataclass import RdataClass
+from dns.rdataset import Rdataset
+from dns.rdatatype import RdataType
 
 import tests
 from letsdns.configuration import is_truthy
@@ -27,15 +33,21 @@ class Test(tests.TestCase):
     @skipUnless(ENABLE_ONLINE_TESTS, 'online tests disabled')
     def test_update_dns(self):
         self.c.active_section = 'tlsa'
-        id_ = update_dns(self.c, name='test', dataset='test')
+        rd = from_text(RdataClass.IN, RdataType.TLSA, tok='3 1 1 1234')
+        ds = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=3)
+        ds.add(rd)
+        id_ = update_dns(self.c, name='test', dataset=ds)
         self.assertGreater(id_, 0)
 
     def test_bad_ttl(self):
         self.c.active_section = 'bad_ttl'
-        with self.assertRaises(ValueError):
-            update_dns(self.c, name='test', dataset='test')
+        rd = from_text(RdataClass.IN, RdataType.TLSA, tok='2 0 1 abcd')
+        ds = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=-3)
+        ds.add(rd)
+        with self.assertRaises(struct.error):
+            update_dns(self.c, name='test', dataset=ds)
 
     def test_bad_nameserver(self):
         self.c.active_section = 'bad_ns'
         with self.assertRaises(socket.gaierror):
-            update_dns(self.c, name='test', dataset='test')
+            update_dns(self.c, name='test', dataset=Rdataset(RdataClass.IN, RdataType.TLSA, ttl=3))
