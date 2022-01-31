@@ -12,8 +12,10 @@
 #
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
+import logging
+import os
+import sys
 from argparse import ArgumentParser
-from logging import INFO
 from logging import basicConfig
 from logging import debug
 from logging import info
@@ -70,12 +72,22 @@ def traverse_sections(conf: Config) -> None:
             warning(f'Ignoring unknown action: {action}')
 
 
+def init_logger():
+    name = 'LOG_LEVEL'
+    try:
+        if name in os.environ:
+            value = os.environ[name]
+            level = getattr(logging, value.upper())
+        else:
+            level = logging.ERROR
+    except AttributeError as e:
+        print(f'Unsupported {name} value: {e}', file=sys.stderr)
+        sys.exit(1)
+    basicConfig(datefmt='%Y-%m-%d %H:%M:%S', format='%(asctime)s %(levelname)s %(message)s', level=level)
+
+
 if __name__ == '__main__':
-    basicConfig(
-        datefmt='%Y-%m-%d %H:%M:%S',
-        format='%(asctime)s %(levelname)s %(message)s',
-        level=INFO
-    )
+    init_logger()
     parser = ArgumentParser(
         description=f'LetsDNS {VERSION} - Manage DANE TLSA records in DNS servers.',
         epilog=f'See {HOMEPAGE} for more information.',
