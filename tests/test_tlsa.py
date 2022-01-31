@@ -30,6 +30,13 @@ ENABLE_ONLINE_TESTS = is_truthy(os.environ.get('ENABLE_ONLINE_TESTS'))
 
 
 class Test(tests.TestCase):
+    @classmethod
+    def tearDownClass(cls) -> None:
+        super().tearDownClass()
+        ds = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=3)
+        update_dns(cls.c, name='_25._tcp', dataset=ds)
+        update_dns(cls.c, name='test', dataset=ds)
+
     @skipUnless(ENABLE_ONLINE_TESTS, 'online tests disabled')
     def test_update_dns(self):
         self.c.active_section = 'tlsa'
