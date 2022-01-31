@@ -14,13 +14,9 @@
 # If not, see <https://www.gnu.org/licenses/>.
 import hashlib
 
-from cryptography.hazmat.primitives.serialization import Encoding
+from cryptography.hazmat.primitives._serialization import Encoding
 from cryptography.x509 import Certificate
 from cryptography.x509 import load_pem_x509_certificate
-from dns.rdata import Rdata
-from dns.rdata import from_text
-from dns.rdataclass import RdataClass
-from dns.rdatatype import RdataType
 
 
 def read_x509_cert(filename: str) -> Certificate:
@@ -36,14 +32,13 @@ def sha256_hexdigest(data) -> str:
     return _hash.hexdigest()
 
 
-def dane_tlsa_data(prefix: str, certificate: Certificate) -> Rdata:
+def dane_tlsa_data(prefix: str, certificate: Certificate) -> str:
     """Return TLSA object for a certificate.
 
     Args:
         prefix: Prefix string, e.g. 3-1-1. All dashes will be replaced with whitespace.
         certificate: x509 certificate.
     """
-    pfx = prefix.replace('-', ' ')
+    _prefix = prefix.replace('-', ' ')
     cert = certificate.public_bytes(Encoding.DER)
-    rdata = from_text(RdataClass.IN, RdataType.TLSA, f'{pfx} {sha256_hexdigest(cert)}')
-    return rdata
+    return f'{_prefix} {sha256_hexdigest(cert)}'

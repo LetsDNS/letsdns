@@ -20,6 +20,7 @@ from logging import error
 
 import dns.query
 import dns.tsigkeyring
+from dns.rdata import from_text
 from dns.rdataclass import RdataClass
 from dns.rdataset import Rdataset
 from dns.rdatatype import RdataType
@@ -49,9 +50,9 @@ def update_dns(conf: Config, name: str, dataset: Rdataset) -> int:
     message = UpdateMessage(zone=zone, keyring=keyring)
     message.replace(name, dataset)
     nameserver = socket.gethostbyname(conf.get_mandatory('nameserver'))
-    r = dns.query.tcp(message, nameserver, timeout=10)
-    debug(r)
-    return r.id
+    response = dns.query.tcp(message, nameserver, timeout=10)
+    debug(response)
+    return response.id
 
 
 def action_dane_tlsa(conf: Config) -> None:
@@ -69,8 +70,9 @@ def action_dane_tlsa(conf: Config) -> None:
             record = conf.get_mandatory(f'{match.group(1)}_record')
             if record_re.match(record):
                 certificate = read_x509_cert(filename)
-                data = dane_tlsa_data(record, certificate)
-                tlsa_list.add(data)
+                tlsa = dane_tlsa_data(record, certificate)
+                rdata = from_text(RdataClass.IN, RdataType.TLSA, tlsa)
+                tlsa_list.add(rdata)
             else:
                 error(f'Unsupported TLSA record "{record}" in section "{conf.active_section}"')
     if len(tlsa_list) > 0:
