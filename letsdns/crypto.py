@@ -14,6 +14,7 @@
 # If not, see <https://www.gnu.org/licenses/>.
 import hashlib
 
+# noinspection PyProtectedMember
 from cryptography.hazmat.primitives._serialization import Encoding
 from cryptography.x509 import Certificate
 from cryptography.x509 import load_pem_x509_certificate
