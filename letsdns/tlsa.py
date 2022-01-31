@@ -20,24 +20,25 @@ from logging import error
 
 import dns.query
 import dns.tsigkeyring
-from dns.update import Update
+from dns.rdataclass import RdataClass
+from dns.rdataset import Rdataset
+from dns.rdatatype import RdataType
+from dns.update import UpdateMessage
 
 from letsdns.configuration import Config
 from letsdns.crypto import dane_tlsa_data
 from letsdns.crypto import read_x509_cert
 
 
-def update_dns(conf: Config, name: str, record_type: str, record_data: str) -> int:
+def update_dns(conf: Config, name: str, dataset: Rdataset) -> int:
     """Update DNS record.
 
     Args:
         conf: Config object
         name: Record name
-        record_type: Record type (e.g. A, TLSA, etc.)
-        record_data: Record data string
+        dataset: Set of rdata objects
     """
-    domain = conf.get_mandatory('domain')
-    ttl = int(conf.get_mandatory('ttl'))
+    zone = conf.get_mandatory('domain')
     keyfile = conf.get('keyfile')
     if keyfile:
         with open(keyfile, 'r') as f:
@@ -45,10 +46,10 @@ def update_dns(conf: Config, name: str, record_type: str, record_data: str) -> i
             keyring = dns.tsigkeyring.from_text(obj)
     else:
         keyring = None
-    update = Update(f'{domain}', keyring=keyring)
-    update.replace(name, ttl, record_type, record_data)
+    message = UpdateMessage(zone=zone, keyring=keyring)
+    message.replace(name, dataset)
     nameserver = socket.gethostbyname(conf.get_mandatory('nameserver'))
-    r = dns.query.tcp(update, nameserver, timeout=10)
+    r = dns.query.tcp(message, nameserver, timeout=10)
     debug(r)
     return r.id
 
@@ -57,6 +58,8 @@ def action_dane_tlsa(conf: Config) -> None:
     """Update TLSA record."""
     path_re = re.compile(r'^(cert_\S+)_path$')
     record_re = re.compile(r'^(\d)-(\d)-(\d)$')
+    ttl = int(conf.get_mandatory('ttl'))
+    tlsa_list = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=ttl)
     for option in conf.options():
         match = path_re.match(option)
         if match:
@@ -67,6 +70,8 @@ def action_dane_tlsa(conf: Config) -> None:
             if record_re.match(record):
                 certificate = read_x509_cert(filename)
                 data = dane_tlsa_data(record, certificate)
-                update_dns(conf, 'letsdns_tlsa', 'TLSA', data)
+                tlsa_list.add(data)
             else:
                 error(f'Unsupported TLSA record "{record}" in section "{conf.active_section}"')
+    if len(tlsa_list) > 0:
+        update_dns(conf, '_25._tcp', tlsa_list)

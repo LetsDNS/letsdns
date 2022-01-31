@@ -27,15 +27,15 @@ class Test(tests.TestCase):
     @skipUnless(ENABLE_ONLINE_TESTS, 'online tests disabled')
     def test_update_dns(self):
         self.c.active_section = 'tlsa'
-        id_ = update_dns(self.c, name='test', record_type='TXT', record_data='test')
+        id_ = update_dns(self.c, name='test', dataset='test')
         self.assertGreater(id_, 0)
 
     def test_bad_ttl(self):
         self.c.active_section = 'bad_ttl'
         with self.assertRaises(ValueError):
-            update_dns(self.c, name='test', record_type='TXT', record_data='test')
+            update_dns(self.c, name='test', dataset='test')
 
     def test_bad_nameserver(self):
         self.c.active_section = 'bad_ns'
         with self.assertRaises(socket.gaierror):
-            update_dns(self.c, name='test', record_type='TXT', record_data='test')
+            update_dns(self.c, name='test', dataset='test')
