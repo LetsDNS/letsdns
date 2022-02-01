@@ -13,9 +13,9 @@
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
 import hashlib
-# noinspection PyProtectedMember
 from typing import List
 
+# noinspection PyProtectedMember
 from cryptography.hazmat.primitives._serialization import Encoding
 from cryptography.x509 import BasicConstraints
 from cryptography.x509 import Certificate
