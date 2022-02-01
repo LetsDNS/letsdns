@@ -29,20 +29,15 @@ horizontal dash).
   Path to a x509 certificate. Replace *ID* with any unique combination
   of numbers and letters. By varying *ID*, you can define as many
   certificates as you need, limited only by available disk space and
-  memory. The *ID* ties certificate records and paths together.
-
-- (TODO: obsolete/auto-discovered) cert_ID_record = *usage-selector-type*
-
-  Certificate usage, TLSA selector and TLSA matching type, separated
-  by dashes. The dashes will be replaced with spaces, so an input of
-  ``3-1-1`` will result in "... TLSA 3 1 1 ...".  See `RFC 7671`_ for
-  more information.
-
-.. _RFC 7671: https://datatracker.ietf.org/doc/html/rfc7671
+  memory.
 
 - domain = *example.com*
 
   Fully qualified name of the domain or subdomain to be operated on.
+
+- hostname = *somehost*
+
+  Short hostname without domain. Required for the *dane-tlsa* action.
 
 - keyfile = */path/to/key.json*
 
