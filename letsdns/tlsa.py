@@ -61,21 +61,23 @@ def action_dane_tlsa(conf: Config) -> None:
     """Update TLSA record."""
     path_re = re.compile(r'^(cert_\S+)_path$')
     ttl = int(conf.get_mandatory('ttl'))
-    tlsa_set: List[str] = list()
+    tlsa_records: List[str] = list()
     for option in conf.options():
-        match = path_re.match(option)
-        if match:
+        if path_re.match(option):
             debug(option)
             filename = conf.get_mandatory(option)
             debug(filename)
-            certificate = read_x509_cert(filename)
-            for record in dane_tlsa_records(certificate):
-                if record not in tlsa_set:
-                    tlsa_set.append(record)
-    if len(tlsa_set) > 0:
-        dataset = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=ttl)
-        for tlsa in tlsa_set:
+            cert = read_x509_cert(filename)
+            for record in dane_tlsa_records(cert):
+                if record not in tlsa_records:
+                    debug(f'Adding {record}')
+                    tlsa_records.append(record)
+                else:
+                    debug(f'Ignoring duplicate {record}')
+    if len(tlsa_records) > 0:
+        rdata_set = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=ttl)
+        for tlsa in tlsa_records:
             rdata = from_text(RdataClass.IN, RdataType.TLSA, tlsa)
-            dataset.add(rdata)
+            rdata_set.add(rdata)
         # TODO: Make name configurable
-        update_dns(conf, '_25._tcp.mail', dataset)
+        update_dns(conf, '_25._tcp.mail', rdata_set)
