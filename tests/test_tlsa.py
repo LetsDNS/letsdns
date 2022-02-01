@@ -31,6 +31,7 @@ from letsdns.crypto import read_x509_cert
 from letsdns.tlsa import action_dane_tlsa
 from letsdns.tlsa import update_dns
 
+ENABLE_DEVELOPER_TESTS = is_truthy(os.environ.get('ENABLE_DEVELOPER_TESTS'))
 ENABLE_ONLINE_TESTS = is_truthy(os.environ.get('ENABLE_ONLINE_TESTS'))
 
 
@@ -65,6 +66,7 @@ class Test(tests.TestCase):
             update_dns(self.c, name='test', dataset=Rdataset(RdataClass.IN, RdataType.TLSA, ttl=3))
 
 
+@skipUnless(ENABLE_DEVELOPER_TESTS, 'developer tests disabled')
 class CertTest(tests.TestCase):
     def _cert(self, name: str) -> Certificate:
         self.c.active_section = 'dane'
