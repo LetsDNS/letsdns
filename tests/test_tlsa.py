@@ -28,6 +28,7 @@ import tests
 from letsdns.configuration import is_truthy
 from letsdns.crypto import dane_tlsa_data
 from letsdns.crypto import read_x509_cert
+from letsdns.tlsa import action_dane_tlsa
 from letsdns.tlsa import update_dns
 
 ENABLE_ONLINE_TESTS = is_truthy(os.environ.get('ENABLE_ONLINE_TESTS'))
@@ -88,3 +89,10 @@ class CertTest(tests.TestCase):
         c = self._cert('cert_leaf_path')
         d = dane_tlsa_data(c)
         self.assertEqual('3 1 2 ', d[1][:6])
+
+
+class ActionTest(tests.TestCase):
+    @skipUnless(ENABLE_ONLINE_TESTS, 'online tests disabled')
+    def test_tlsa(self):
+        self.c.active_section = 'dane'
+        action_dane_tlsa(self.c)
