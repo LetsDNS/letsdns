@@ -31,7 +31,7 @@ horizontal dash).
   certificates as you need, limited only by available disk space and
   memory. The *ID* ties certificate records and paths together.
 
-- cert_ID_record = *usage-selector-type*
+- (TODO: obsolete/auto-discovered) cert_ID_record = *usage-selector-type*
 
   Certificate usage, TLSA selector and TLSA matching type, separated
   by dashes. The dashes will be replaced with spaces, so an input of
