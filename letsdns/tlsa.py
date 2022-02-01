@@ -72,4 +72,5 @@ def action_dane_tlsa(conf: Config) -> None:
                 rdata = from_text(RdataClass.IN, RdataType.TLSA, tlsa)
                 dataset.add(rdata)
     if len(dataset) > 0:
-        update_dns(conf, '_25._tcp', dataset)
+        # TODO: Make name configurable
+        update_dns(conf, '_25._tcp.mail', dataset)
