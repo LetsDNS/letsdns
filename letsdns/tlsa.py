@@ -16,7 +16,6 @@ import json
 import re
 import socket
 from logging import debug
-from logging import error
 
 import dns.query
 import dns.tsigkeyring
@@ -60,7 +59,6 @@ def update_dns(conf: Config, name: str, dataset: Rdataset) -> int:
 def action_dane_tlsa(conf: Config) -> None:
     """Update TLSA record."""
     path_re = re.compile(r'^(cert_\S+)_path$')
-    record_re = re.compile(r'^(\d)-(\d)-(\d)$')
     ttl = int(conf.get_mandatory('ttl'))
     dataset = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=ttl)
     for option in conf.options():
@@ -69,13 +67,9 @@ def action_dane_tlsa(conf: Config) -> None:
             debug(option)
             filename = conf.get_mandatory(option)
             debug(filename)
-            record = conf.get_mandatory(f'{match.group(1)}_record')
-            if record_re.match(record):
-                certificate = read_x509_cert(filename)
-                tlsa = dane_tlsa_data(certificate)
+            certificate = read_x509_cert(filename)
+            for tlsa in dane_tlsa_data(certificate):
                 rdata = from_text(RdataClass.IN, RdataType.TLSA, tlsa)
                 dataset.add(rdata)
-            else:
-                error(f'Unsupported TLSA record "{record}" in section "{conf.active_section}"')
     if len(dataset) > 0:
         update_dns(conf, '_25._tcp', dataset)
