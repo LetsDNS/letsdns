@@ -17,6 +17,8 @@ from typing import List
 
 # noinspection PyProtectedMember
 from cryptography.hazmat.primitives._serialization import Encoding
+# noinspection PyProtectedMember
+from cryptography.hazmat.primitives._serialization import PublicFormat
 from cryptography.x509 import BasicConstraints
 from cryptography.x509 import Certificate
 from cryptography.x509 import load_pem_x509_certificate
@@ -28,7 +30,7 @@ def read_x509_cert(filename: str) -> Certificate:
         return load_pem_x509_certificate(f.read())
 
 
-def sha_hexdigest(something):
+def sha_digests(something):
     """Generate hexadecimal SHA256 and SHA512 hashes for some data."""
     sha256 = hashlib.sha256()
     sha256.update(something)
@@ -37,17 +39,20 @@ def sha_hexdigest(something):
     return sha256.hexdigest(), sha512.hexdigest()
 
 
-def dane_tlsa_data(certificate: Certificate) -> List[str]:
-    """Return TLSA record data for a certificate.
+def dane_tlsa_data(cert: Certificate) -> List[str]:
+    """Return list of TLSA record data for the certificate.
 
     Args:
-        certificate: x509 certificate.
+        cert: x509 certificate.
     """
-    bc: BasicConstraints = certificate.extensions.get_extension_for_class(BasicConstraints).value
+    bc: BasicConstraints = cert.extensions.get_extension_for_class(BasicConstraints).value
     if bc.ca:
         usage = '2'  # DANE-TA
     else:
         usage = '3'  # DANE-EE
-    public_key = certificate.public_bytes(Encoding.DER)
-    sha256, sha512 = sha_hexdigest(public_key)
-    return [f'{usage} 1 1 {sha256}', f'{usage} 1 2 {sha512}']
+    pk = cert.public_key().public_bytes(format=PublicFormat.SubjectPublicKeyInfo, encoding=Encoding.DER)
+    sha256, sha512 = sha_digests(pk)
+    return [
+        f'{usage} 1 1 {sha256}',
+        f'{usage} 1 2 {sha512}'
+    ]
