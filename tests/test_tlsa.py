@@ -37,6 +37,7 @@ ENABLE_ONLINE_TESTS = is_truthy(os.environ.get('ENABLE_ONLINE_TESTS'))
 
 class Test(tests.TestCase):
     @classmethod
+    @skipUnless(ENABLE_ONLINE_TESTS, 'online tests disabled')
     def tearDownClass(cls) -> None:
         super().tearDownClass()
         ds = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=3)
@@ -52,6 +53,7 @@ class Test(tests.TestCase):
         id_ = update_dns(self.c, name='test', dataset=ds)
         self.assertGreater(id_, 0)
 
+    @skipUnless(ENABLE_ONLINE_TESTS, 'online tests disabled')
     def test_bad_ttl(self):
         self.c.active_section = 'bad_ttl'
         rd = from_text(RdataClass.IN, RdataType.TLSA, tok='2 0 1 abcd')
