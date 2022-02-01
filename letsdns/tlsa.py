@@ -16,6 +16,7 @@ import json
 import re
 import socket
 from logging import debug
+from typing import List
 
 import dns.query
 import dns.tsigkeyring
@@ -26,7 +27,7 @@ from dns.rdatatype import RdataType
 from dns.update import UpdateMessage
 
 from letsdns.configuration import Config
-from letsdns.crypto import dane_tlsa_data
+from letsdns.crypto import dane_tlsa_records
 from letsdns.crypto import read_x509_cert
 
 
@@ -60,7 +61,7 @@ def action_dane_tlsa(conf: Config) -> None:
     """Update TLSA record."""
     path_re = re.compile(r'^(cert_\S+)_path$')
     ttl = int(conf.get_mandatory('ttl'))
-    dataset = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=ttl)
+    tlsa_set: List[str] = list()
     for option in conf.options():
         match = path_re.match(option)
         if match:
@@ -68,9 +69,13 @@ def action_dane_tlsa(conf: Config) -> None:
             filename = conf.get_mandatory(option)
             debug(filename)
             certificate = read_x509_cert(filename)
-            for tlsa in dane_tlsa_data(certificate):
-                rdata = from_text(RdataClass.IN, RdataType.TLSA, tlsa)
-                dataset.add(rdata)
-    if len(dataset) > 0:
+            for record in dane_tlsa_records(certificate):
+                if record not in tlsa_set:
+                    tlsa_set.append(record)
+    if len(tlsa_set) > 0:
+        dataset = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=ttl)
+        for tlsa in tlsa_set:
+            rdata = from_text(RdataClass.IN, RdataType.TLSA, tlsa)
+            dataset.add(rdata)
         # TODO: Make name configurable
         update_dns(conf, '_25._tcp.mail', dataset)

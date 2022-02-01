@@ -26,7 +26,7 @@ from dns.rdatatype import RdataType
 
 import tests
 from letsdns.configuration import is_truthy
-from letsdns.crypto import dane_tlsa_data
+from letsdns.crypto import dane_tlsa_records
 from letsdns.crypto import read_x509_cert
 from letsdns.tlsa import action_dane_tlsa
 from letsdns.tlsa import update_dns
@@ -77,7 +77,7 @@ class CertTest(tests.TestCase):
 
     def test_ca_dane(self):
         c = self._cert('cert_ca_path')
-        d = dane_tlsa_data(c)
+        d = dane_tlsa_records(c)
         self.assertEqual('2 1 1 ', d[0][:6])
 
     def test_leaf_cert(self):
@@ -87,7 +87,7 @@ class CertTest(tests.TestCase):
 
     def test_leaf_dane(self):
         c = self._cert('cert_leaf_path')
-        d = dane_tlsa_data(c)
+        d = dane_tlsa_records(c)
         self.assertEqual('3 1 2 ', d[1][:6])
 
 

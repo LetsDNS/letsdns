@@ -39,7 +39,7 @@ def sha_digests(something):
     return sha256.hexdigest(), sha512.hexdigest()
 
 
-def dane_tlsa_data(cert: Certificate) -> List[str]:
+def dane_tlsa_records(cert: Certificate) -> List[str]:
     """Return list of TLSA record data for the certificate.
 
     Args:
