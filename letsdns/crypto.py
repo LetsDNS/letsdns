@@ -16,6 +16,7 @@ import hashlib
 
 # noinspection PyProtectedMember
 from cryptography.hazmat.primitives._serialization import Encoding
+from cryptography.x509 import BasicConstraints
 from cryptography.x509 import Certificate
 from cryptography.x509 import load_pem_x509_certificate
 
@@ -33,13 +34,19 @@ def sha256_hexdigest(data) -> str:
     return _hash.hexdigest()
 
 
-def dane_tlsa_data(prefix: str, certificate: Certificate) -> str:
+def dane_tlsa_data(certificate: Certificate) -> str:
     """Return TLSA object for a certificate.
 
     Args:
-        prefix: Prefix string, e.g. 3-1-1. All dashes will be replaced with whitespace.
         certificate: x509 certificate.
     """
-    _prefix = prefix.replace('-', ' ')
-    cert = certificate.public_bytes(Encoding.DER)
-    return f'{_prefix} {sha256_hexdigest(cert)}'
+    # _prefix = prefix.replace('-', ' ')
+    bc: BasicConstraints = certificate.extensions.get_extension_for_class(BasicConstraints).value
+    if bc.ca:
+        cert_usage = '2'  # DANE-TA
+    else:
+        cert_usage = '3'  # DANE-EE
+    selector = '1'  # DER-encoded public key
+    matching_type = '1'  # SHA-256 hash
+    public_key = certificate.public_bytes(Encoding.DER)
+    return f'{cert_usage} {selector} {matching_type} {sha256_hexdigest(public_key)}'

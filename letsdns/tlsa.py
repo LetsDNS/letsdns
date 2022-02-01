@@ -45,7 +45,7 @@ def update_dns(conf: Config, name: str, dataset: Rdataset) -> int:
         with open(keyfile, 'r') as f:
             obj = json.load(f)
             keyring = dns.tsigkeyring.from_text(obj)
-    else:
+    else:  # pragma: no cover
         keyring = None
     message = UpdateMessage(zone=zone, keyring=keyring)
     message.delete(name)
@@ -72,7 +72,7 @@ def action_dane_tlsa(conf: Config) -> None:
             record = conf.get_mandatory(f'{match.group(1)}_record')
             if record_re.match(record):
                 certificate = read_x509_cert(filename)
-                tlsa = dane_tlsa_data(record, certificate)
+                tlsa = dane_tlsa_data(certificate)
                 rdata = from_text(RdataClass.IN, RdataType.TLSA, tlsa)
                 dataset.add(rdata)
             else:
