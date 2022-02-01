@@ -77,7 +77,7 @@ class CertTest(tests.TestCase):
     def test_ca_dane(self):
         c = self._cert('cert_ca_path')
         d = dane_tlsa_data(c)
-        self.assertEqual('2 1 1 ', d[:6])
+        self.assertEqual('2 1 1 ', d[0][:6])
 
     def test_leaf_cert(self):
         c = self._cert('cert_leaf_path')
@@ -87,4 +87,4 @@ class CertTest(tests.TestCase):
     def test_leaf_dane(self):
         c = self._cert('cert_leaf_path')
         d = dane_tlsa_data(c)
-        self.assertEqual('3 1 1 ', d[:6])
+        self.assertEqual('3 1 2 ', d[1][:6])

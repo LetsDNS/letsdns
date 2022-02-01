@@ -13,8 +13,9 @@
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
 import hashlib
-
 # noinspection PyProtectedMember
+from typing import List
+
 from cryptography.hazmat.primitives._serialization import Encoding
 from cryptography.x509 import BasicConstraints
 from cryptography.x509 import Certificate
@@ -27,26 +28,26 @@ def read_x509_cert(filename: str) -> Certificate:
         return load_pem_x509_certificate(f.read())
 
 
-def sha256_hexdigest(data) -> str:
-    """Generate hexadecimal SHA256 hash for some data."""
-    _hash = hashlib.sha256()
-    _hash.update(data)
-    return _hash.hexdigest()
+def sha_hexdigest(something):
+    """Generate hexadecimal SHA256 and SHA512 hashes for some data."""
+    sha256 = hashlib.sha256()
+    sha256.update(something)
+    sha512 = hashlib.sha512()
+    sha512.update(something)
+    return sha256.hexdigest(), sha512.hexdigest()
 
 
-def dane_tlsa_data(certificate: Certificate) -> str:
-    """Return TLSA object for a certificate.
+def dane_tlsa_data(certificate: Certificate) -> List[str]:
+    """Return TLSA record data for a certificate.
 
     Args:
         certificate: x509 certificate.
     """
-    # _prefix = prefix.replace('-', ' ')
     bc: BasicConstraints = certificate.extensions.get_extension_for_class(BasicConstraints).value
     if bc.ca:
-        cert_usage = '2'  # DANE-TA
+        usage = '2'  # DANE-TA
     else:
-        cert_usage = '3'  # DANE-EE
-    selector = '1'  # DER-encoded public key
-    matching_type = '1'  # SHA-256 hash
+        usage = '3'  # DANE-EE
     public_key = certificate.public_bytes(Encoding.DER)
-    return f'{cert_usage} {selector} {matching_type} {sha256_hexdigest(public_key)}'
+    sha256, sha512 = sha_hexdigest(public_key)
+    return [f'{usage} 1 1 {sha256}', f'{usage} 1 2 {sha512}']
