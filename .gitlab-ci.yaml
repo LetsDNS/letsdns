@@ -23,9 +23,3 @@ python-tests:
     - pip install -r requirements.txt
   script:
     - make -C tests --warn-undefined-variables
-
-sast:
-  stage: test
-  when: manual
-include:
-- template: Security/SAST.gitlab-ci.yml
