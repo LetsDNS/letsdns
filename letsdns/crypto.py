@@ -47,9 +47,9 @@ def dane_tlsa_records(cert: Certificate) -> List[str]:
     """
     bc: BasicConstraints = cert.extensions.get_extension_for_class(BasicConstraints).value
     if bc.ca:
-        usage = '2'  # DANE-TA
+        usage = 2  # DANE-TA
     else:
-        usage = '3'  # DANE-EE
+        usage = 3  # DANE-EE
     pk = cert.public_key().public_bytes(format=PublicFormat.SubjectPublicKeyInfo, encoding=Encoding.DER)
     sha256, sha512 = sha_digests(pk)
     return [
