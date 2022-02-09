@@ -1,9 +1,9 @@
 # vim:ft=yaml:ts=2:sw=2:et
 
 name: LetsDNS project workflow
-on: [create, push]
+on: push
 env:
-  UNITTEST_CONF: citest.conf
+  CONF: citest.conf
 
 jobs:
   python-build:
@@ -23,14 +23,12 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run tests with coverage
-        run: make -C tests coverage UNITTEST_CONF=$UNITTEST_CONF
+        run: make -C tests coverage UNITTEST_CONF=$CONF
 
-      - if: github.event.ref_type == 'tag'
-        name: Build Python artifacts
+      - name: Build Python artifacts
         run: make dist
 
-      - if: github.event.ref_type == 'tag'
-        name: Store Python artifacts
+      - name: Store Python artifacts
         uses: actions/upload-artifact@v2
         with:
           name: python-artifacts
