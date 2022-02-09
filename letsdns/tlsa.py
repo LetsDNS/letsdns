@@ -24,7 +24,7 @@ from dns.rdata import from_text
 from dns.rdataclass import RdataClass
 from dns.rdataset import Rdataset
 from dns.rdatatype import RdataType
-from dns.update import UpdateMessage
+from dns.update import Update
 
 from letsdns.configuration import Config
 from letsdns.crypto import dane_tlsa_records
@@ -47,7 +47,7 @@ def update_dns(conf: Config, name: str, dataset: Rdataset) -> int:
             keyring = dns.tsigkeyring.from_text(obj)
     else:  # pragma: no cover
         keyring = None
-    message = UpdateMessage(zone=zone, keyring=keyring)
+    message = Update(zone=zone, keyring=keyring)
     message.delete(name)
     if len(dataset) > 0:
         message.replace(name, dataset)
