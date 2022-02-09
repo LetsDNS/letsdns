@@ -1,0 +1,35 @@
+# vim:ft=yaml:ts=2:sw=2:et
+
+name: LetsDNS project workflow
+on: [create, push]
+
+jobs:
+  python-build:
+    name: Build and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests with coverage
+        run: make -C tests coverage
+
+      - if: github.event.ref_type == 'tag'
+        name: Build Python artifacts
+        run: make dist
+
+      - if: github.event.ref_type == 'tag'
+        name: Store Python artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: python-artifacts
+          path: dist/*
