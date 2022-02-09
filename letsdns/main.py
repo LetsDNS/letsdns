@@ -18,42 +18,13 @@ import sys
 from argparse import ArgumentParser
 from logging import basicConfig
 from logging import debug
-from logging import info
 from logging import warning
-
-from dns.rdatatype import MX
-from dns.rdatatype import TLSA
-from dns.rdatatype import TXT
-from dns.resolver import resolve
 
 from letsdns import HOMEPAGE
 from letsdns import IDENTIFIER
 from letsdns import VERSION
 from letsdns.configuration import Config
 from letsdns.tlsa import action_dane_tlsa
-
-
-def show_mx(domain: str) -> None:
-    answers = resolve(domain, 'MX')
-    a: MX
-    for a in answers:
-        info(f'{a.exchange} has preference {a.preference}')
-
-
-def show_tlsa(domain: str) -> None:
-    answers = resolve(f'letsdns_tlsa._acme-challenge.{domain}', 'TLSA')
-    a: TLSA
-    for a in answers:
-        t: str = a.to_text()
-        info(t)
-
-
-def show_txt(domain: str) -> None:
-    answers = resolve(domain, 'TXT')
-    a: TXT
-    for a in answers:
-        t: str = a.to_text()
-        info(t)
 
 
 def traverse_sections(conf: Config) -> None:
