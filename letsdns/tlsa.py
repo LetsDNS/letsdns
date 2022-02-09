@@ -12,52 +12,22 @@
 #
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
-import json
 import re
-import socket
 from logging import debug
 from typing import List
 
-import dns.query
-import dns.tsigkeyring
 from dns.rdata import from_text
 from dns.rdataclass import RdataClass
 from dns.rdataset import Rdataset
 from dns.rdatatype import RdataType
-from dns.update import Update
 
+from letsdns.action import Action
 from letsdns.configuration import Config
 from letsdns.crypto import dane_tlsa_records
 from letsdns.crypto import read_x509_cert
 
 
-def update_dns(conf: Config, name: str, dataset: Rdataset) -> int:
-    """Update DNS record.
-
-    Args:
-        conf: Config object
-        name: Record name
-        dataset: Set of rdata objects
-    """
-    zone = conf.get_mandatory('domain')
-    keyfile = conf.get('keyfile')
-    if keyfile:
-        with open(keyfile, 'r') as f:
-            obj = json.load(f)
-            keyring = dns.tsigkeyring.from_text(obj)
-    else:  # pragma: no cover
-        keyring = None
-    message = Update(zone=zone, keyring=keyring)
-    message.delete(name)
-    if len(dataset) > 0:
-        message.replace(name, dataset)
-    nameserver = socket.gethostbyname(conf.get_mandatory('nameserver'))
-    response = dns.query.tcp(message, nameserver, timeout=10)
-    debug(response)
-    return response.id
-
-
-def action_dane_tlsa(conf: Config) -> None:
+def action_dane_tlsa(conf: Config, action: Action) -> None:
     """Update TLSA record."""
     path_re = re.compile(r'^(cert_\S+)_path$')
     ttl = int(conf.get_mandatory('ttl'))
@@ -82,4 +52,4 @@ def action_dane_tlsa(conf: Config) -> None:
         for tlsa in tlsa_records:
             rdata = from_text(RdataClass.IN, RdataType.TLSA, tlsa)
             rdata_set.add(rdata)
-        update_dns(conf, f'_25._tcp.{hostname}', rdata_set)
+        action.execute(conf, dataset=rdata_set, name=f'_25._tcp.{hostname}')

@@ -24,7 +24,24 @@ from letsdns import HOMEPAGE
 from letsdns import IDENTIFIER
 from letsdns import VERSION
 from letsdns.configuration import Config
+from letsdns.liveupdate import DnsLiveUpdate
+from letsdns.nsupdate import NsupdateStdout
 from letsdns.tlsa import action_dane_tlsa
+
+
+def lookup_action(name: str):
+    """Lookup a callable (method) and an action class.
+
+    Returns None,None if no mapping was found.
+    """
+    action_map = {
+        'dane-tlsa': [action_dane_tlsa, DnsLiveUpdate],
+        'nsupdate-stdout': [action_dane_tlsa, NsupdateStdout],
+    }
+    if name in action_map:
+        return action_map[name][0], action_map[name][1]
+    warning(f'Unknown action: {name}')
+    return None, None
 
 
 def traverse_sections(conf: Config) -> None:
@@ -36,14 +53,14 @@ def traverse_sections(conf: Config) -> None:
         conf.active_section = section
         debug(f'section: {section}')
         action = conf.get('action')
-        if 'dane-tlsa' == action:
-            debug(f'action: {action}')
-            action_dane_tlsa(conf)
-        elif action:
-            warning(f'Ignoring unknown action: {action}')
+        if action:
+            _callable, _class = lookup_action(action)
+            if _callable and _class:
+                debug(f'action: {action} / {_callable} / {_class}')
+                _callable(conf, _class())
 
 
-def init_logger():
+def init_logger() -> None:
     name = 'LOG_LEVEL'
     try:
         if name in os.environ:

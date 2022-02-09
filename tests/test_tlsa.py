@@ -28,21 +28,26 @@ import tests
 from letsdns.configuration import is_truthy
 from letsdns.crypto import dane_tlsa_records
 from letsdns.crypto import read_x509_cert
+from letsdns.liveupdate import DnsLiveUpdate
 from letsdns.tlsa import action_dane_tlsa
-from letsdns.tlsa import update_dns
 
 ENABLE_DEVELOPER_TESTS = is_truthy(os.environ.get('ENABLE_DEVELOPER_TESTS'))
 ENABLE_ONLINE_TESTS = is_truthy(os.environ.get('ENABLE_ONLINE_TESTS'))
 
 
 class Test(tests.TestCase):
+    def setUp(self) -> None:
+        super().setUp()
+        self.update = DnsLiveUpdate()
+
     @classmethod
     @skipUnless(ENABLE_ONLINE_TESTS, 'online tests disabled')
     def tearDownClass(cls) -> None:
         super().tearDownClass()
         ds = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=3)
-        update_dns(cls.c, name='_25._tcp', dataset=ds)
-        update_dns(cls.c, name='test', dataset=ds)
+        u = DnsLiveUpdate()
+        u.execute(cls.c, name='_25._tcp', dataset=ds)
+        u.execute(cls.c, name='test', dataset=ds)
 
     @skipUnless(ENABLE_ONLINE_TESTS, 'online tests disabled')
     def test_update_dns(self):
@@ -50,7 +55,7 @@ class Test(tests.TestCase):
         rd = from_text(RdataClass.IN, RdataType.TLSA, tok='3 1 1 1234')
         ds = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=3)
         ds.add(rd)
-        id_ = update_dns(self.c, name='test', dataset=ds)
+        id_ = self.update.execute(self.c, name='test', dataset=ds)
         self.assertGreater(id_, 0)
 
     @skipUnless(ENABLE_ONLINE_TESTS, 'online tests disabled')
@@ -60,12 +65,12 @@ class Test(tests.TestCase):
         ds = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=-3)
         ds.add(rd)
         with self.assertRaises(struct.error):
-            update_dns(self.c, name='test', dataset=ds)
+            self.update.execute(self.c, name='test', dataset=ds)
 
     def test_bad_nameserver(self):
         self.c.active_section = 'bad_ns'
         with self.assertRaises(socket.gaierror):
-            update_dns(self.c, name='test', dataset=Rdataset(RdataClass.IN, RdataType.TLSA, ttl=3))
+            self.update.execute(self.c, name='test', dataset=Rdataset(RdataClass.IN, RdataType.TLSA, ttl=3))
 
 
 @skipUnless(ENABLE_DEVELOPER_TESTS, 'developer tests disabled')
@@ -99,4 +104,4 @@ class ActionTest(tests.TestCase):
     @skipUnless(ENABLE_ONLINE_TESTS, 'online tests disabled')
     def test_tlsa(self):
         self.c.active_section = 'dane'
-        action_dane_tlsa(self.c)
+        action_dane_tlsa(self.c, DnsLiveUpdate())
