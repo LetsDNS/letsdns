@@ -2,6 +2,8 @@
 
 name: LetsDNS project workflow
 on: [create, push]
+env:
+  UNITTEST_CONF: citest.conf
 
 jobs:
   python-build:
@@ -21,7 +23,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run tests with coverage
-        run: make -C tests coverage
+        run: make -C tests coverage UNITTEST_CONF=$UNITTEST_CONF
 
       - if: github.event.ref_type == 'tag'
         name: Build Python artifacts
