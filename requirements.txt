@@ -3,6 +3,7 @@ cryptography
 dnspython
 
 # Software development
+build
 coverage
 setuptools
 twine
