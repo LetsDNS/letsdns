@@ -21,4 +21,4 @@ from letsdns.configuration import Config
 class Action(ABC):
     @abstractmethod
     def execute(self, conf: Config, *args, **kwargs):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
