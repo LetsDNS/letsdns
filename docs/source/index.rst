@@ -4,9 +4,11 @@ Welcome to LetsDNS
 ==================
 
 Manage DANE TLSA records in DNS servers. Supports multiple domains
-with multiple TLS certificates each.
+with multiple TLS certificates each. The project is hosted on `GitHub`_.
 
-Copyright © 2022 Ralph Seichter.
+.. _GitHub: https://github.com/LetsDNS/letsdns
+
+Copyright © 2022 Ralph Seichter
 
 .. toctree::
     :maxdepth: 3
