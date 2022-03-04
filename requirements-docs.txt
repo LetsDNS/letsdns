@@ -1,3 +1,2 @@
-# Sphinx-based documentation
-sphinx
+# Live reload for local documentation
 livereload
