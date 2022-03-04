@@ -25,6 +25,12 @@ jobs:
       - name: Generate documentation
         run: make -C docs cibuild
 
+      - name: Store documentation artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: documentation
+          path: docs/build/html/*
+
       - name: Run tests with coverage
         run: make -C tests coverage UNITTEST_CONF=$CONF
 
