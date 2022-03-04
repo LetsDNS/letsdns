@@ -7,15 +7,13 @@ env:
 
 jobs:
   build-documentation:
-    name: Build documentation
-    runs-on: ubuntu-latest
+    name: Documentation
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v1
+      - uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: '3.7'
 
       - name: Generate documentation
         run: make -C docs cibuild
@@ -27,15 +25,16 @@ jobs:
           path: docs/build/html/*
 
   build-python:
-    name: Build and test Python code
-    runs-on: ubuntu-latest
+    name: Python build and tests
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        python-version: ['3.7', '3.8', '3.9', '3.10']
     steps:
       - uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v1
+      - uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
         run: |
