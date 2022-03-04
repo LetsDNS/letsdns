@@ -4,6 +4,14 @@ letsdns package
 Submodules
 ----------
 
+letsdns.action module
+---------------------
+
+.. automodule:: letsdns.action
+   :members:
+   :no-undoc-members:
+   :show-inheritance:
+
 letsdns.configuration module
 ----------------------------
 
@@ -20,10 +28,26 @@ letsdns.crypto module
    :no-undoc-members:
    :show-inheritance:
 
+letsdns.liveupdate module
+-------------------------
+
+.. automodule:: letsdns.liveupdate
+   :members:
+   :no-undoc-members:
+   :show-inheritance:
+
 letsdns.main module
 -------------------
 
 .. automodule:: letsdns.main
+   :members:
+   :no-undoc-members:
+   :show-inheritance:
+
+letsdns.nsupdate module
+-----------------------
+
+.. automodule:: letsdns.nsupdate
    :members:
    :no-undoc-members:
    :show-inheritance:
