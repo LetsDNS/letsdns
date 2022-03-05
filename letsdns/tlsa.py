@@ -13,7 +13,6 @@
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
 import re
-from logging import debug
 from typing import List
 
 from dns.rdata import from_text
@@ -35,18 +34,12 @@ def action_dane_tlsa(conf: Config, action: Action) -> None:
     tlsa_records: List[str] = list()
     for option in conf.options():
         if path_re.match(option):
-            debug(option)
             filename = conf.get_mandatory(option)
-            debug(filename)
             hostname = conf.get_mandatory('hostname')
-            debug(hostname)
             cert = read_x509_cert(filename)
             for record in dane_tlsa_records(cert):
                 if record not in tlsa_records:
-                    debug(f'Adding {record}')
                     tlsa_records.append(record)
-                else:
-                    debug(f'Ignoring duplicate {record}')
     if hostname and len(tlsa_records) > 0:
         rdata_set = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=ttl)
         for tlsa in tlsa_records:

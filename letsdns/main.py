@@ -17,7 +17,7 @@ import os
 import sys
 from argparse import ArgumentParser
 from logging import basicConfig
-from logging import debug
+from logging import info
 from logging import warning
 
 from letsdns import HOMEPAGE
@@ -51,13 +51,15 @@ def traverse_sections(conf: Config) -> None:
     """
     for section in conf.parser.sections():
         conf.active_section = section
-        debug(f'section: {section}')
+        info(f'Config section: {section}')
         action = conf.get('action')
         if action:
             _callable, _class = lookup_action(action)
             if _callable and _class:
-                debug(f'action: {action} / {_callable} / {_class}')
+                description = f' {action} {_callable} {_class}'
+                info(f'Start{description}')
                 _callable(conf, _class())
+                info(f'End{description}')
 
 
 def init_logger() -> None:

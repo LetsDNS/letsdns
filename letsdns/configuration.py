@@ -15,6 +15,7 @@
 import sys
 from configparser import ConfigParser
 from configparser import ExtendedInterpolation
+from logging import debug
 from typing import List
 
 
@@ -79,7 +80,9 @@ class Config:
         Args:
             name: Option name.
         """
-        return self.parser.get(self.active_section, name)
+        v = self.parser.get(self.active_section, name)
+        debug(f'config: {name} = {v}')
+        return v
 
     def get_domain(self) -> str:
         """Return the mandatory 'domain' configuration value.
