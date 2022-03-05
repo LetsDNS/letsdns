@@ -1,0 +1,14 @@
+# Create local base directory.
+mkdir /path/to/LetsDNS
+cd /path/to/LetsDNS
+
+# Create and activate Python version 3.7 or newer virtual environment.
+python3.9 -m venv .venv
+source .venv/bin/activate
+
+# Clone Git repository
+git clone https://github.com/LetsDNS/letsdns.git
+
+# Install dependencies
+cd letsdns
+pip install -r requirements.txt

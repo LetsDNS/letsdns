@@ -14,8 +14,11 @@ Copyright © 2022 Ralph Seichter
     :maxdepth: 3
     :caption: Contents:
 
+    install
     config
     example
+    operation
+    envvar
 
     letsdns
     license
