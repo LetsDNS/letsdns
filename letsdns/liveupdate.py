@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
 import json
+import os
 from logging import debug
 
 from _socket import gethostbyname
@@ -42,6 +43,17 @@ class DnsLiveUpdate(Action):
         if len(dataset) > 0:
             update.replace(name, dataset)
         nameserver = gethostbyname(conf.get_mandatory('nameserver'))
-        response = query.tcp(update, nameserver, timeout=10)
-        debug(response)
+        debug(f'DNS update: {update}')
+        response = query.tcp(update, nameserver, timeout=self.timeout_seconds())
+        debug(f'DNS Response: {response}')
         return response.id
+
+    @staticmethod
+    def timeout_seconds() -> int:
+        name = 'DNS_TIMEOUT_SECONDS'
+        if name in os.environ:
+            s = int(os.environ[name])
+        else:
+            s = 30
+        debug(f'DNS timeout: {s} seconds')
+        return s
