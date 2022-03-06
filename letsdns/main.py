@@ -23,6 +23,7 @@ from logging import warning
 from letsdns import HOMEPAGE
 from letsdns import IDENTIFIER
 from letsdns import VERSION
+from letsdns.action import dynamic_action
 from letsdns.action import import_action
 from letsdns.configuration import Config
 from letsdns.liveupdate import DnsLiveUpdate
@@ -44,27 +45,30 @@ def lookup_action(name: str):
     elif name.startswith('dynamic:'):
         name = name.split(':')[1]
         action_class = import_action(name)
-        return action_dane_tlsa, action_class
+        return dynamic_action, action_class
     warning(f'Unknown action: {name}')
     return None, None
 
 
-def traverse_sections(conf: Config) -> None:
-    """Traverse the sections of a configuration object.
+def traverse_sections(conf: Config) -> int:
+    """Traverse the sections of a configuration object and return the number of actions found.
 
     If sections define an 'action' option, process accordingly.
     """
+    action_count = 0
     for section in conf.parser.sections():
         conf.active_section = section
         info(f'Config section: {section}')
         action = conf.get('action')
         if action:
+            action_count += 1
             _callable, _class = lookup_action(action)
             if _callable and _class:
                 description = f' {action} {_callable} {_class}'
                 info(f'Start{description}')
                 _callable(conf, _class())
                 info(f'End{description}')
+    return action_count
 
 
 def init_logger() -> None:

@@ -12,13 +12,20 @@
 #
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
+from logging import debug
+
 from letsdns.action import Action
 from letsdns.configuration import Config
 
 
 class AnAction(Action):
-    def execute(self, conf: Config, *args, **kwargs):
-        pass
+    def pre_execute(self, conf: Config) -> int:
+        r = super().pre_execute(conf)
+        debug('AnAction.pre_execute')
+        return r
+
+    def execute(self, conf: Config, *args, **kwargs) -> int:
+        return 0
 
 
 class NotAnAction:

@@ -20,12 +20,14 @@ from os import environ
 from letsdns.configuration import Config
 from letsdns.main import init_logger
 
+UNITTEST_CONF = 'UNITTEST_CONF'
 
-def read_config(active_section: str = 'DEFAULT') -> Config:
-    name = 'UNITTEST_CONF'
-    path = environ.get(name)
-    if path is None:  # pragma: no cover
-        raise ValueError(f'Missing environment variable {name}')
+
+def read_config(path: str = UNITTEST_CONF, active_section: str = 'DEFAULT') -> Config:
+    if path == UNITTEST_CONF:
+        path = environ.get(path)
+        if path is None:  # pragma: no cover
+            raise ValueError(f'Missing environment variable {UNITTEST_CONF}')
     conf = Config()
     conf.init(path)
     conf.active_section = active_section
