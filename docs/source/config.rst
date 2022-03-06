@@ -24,6 +24,11 @@ horizontal dash).
     Create DANE TLSA records for the certificates defined in a
     configuration section.
 
+  - dynamic:*module.containing.YourActionClass*
+
+    Import and execute a dynamic action at runtime. Please see the
+    dedicated documentation section for more information.
+
 - cert_ID_path = */path/to/cert.pem*
 
   Path to a x509 certificate. Replace *ID* with any unique combination

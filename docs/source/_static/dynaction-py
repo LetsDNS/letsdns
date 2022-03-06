@@ -1,0 +1,7 @@
+from letsdns.action import Action
+from letsdns.configuration import Config
+
+class MyAction(Action):
+    """Do nothing but return zero to indicate success."""
+    def execute(self, conf: Config, *args, **kwargs) -> int:
+        return 0

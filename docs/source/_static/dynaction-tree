@@ -1,0 +1,13 @@
+# Activate your project's Python virtualenv
+cd ~/projects/custom-actions
+source .venv/bin/activate
+
+# Link to your local copy of the LetsDNS source code
+pip install --editable /path/to/letsdns
+
+# Structure of ~/projects/custom-actions
+#
+# .
+# └── sample
+#     ├── __init__.py
+#     └── action.py

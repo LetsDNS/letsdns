@@ -19,6 +19,7 @@ Copyright © 2022 Ralph Seichter
     example
     operation
     envvar
+    dynaction
 
     letsdns
     license
