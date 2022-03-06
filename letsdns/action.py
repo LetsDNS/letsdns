@@ -14,6 +14,7 @@
 # If not, see <https://www.gnu.org/licenses/>.
 from abc import ABC
 from abc import abstractmethod
+from logging import debug
 from typing import Type
 
 from letsdns.configuration import Config
@@ -33,6 +34,7 @@ def import_class(class_name: str):
     Args:
         class_name: Fully qualified class name, e.g. "mymodule.submodule.MyClass".
     """
+    debug(f'Import {class_name}')
     # Split fully qualified name into components, the last being the class name.
     components = class_name.split('.')
     # Import the module containing the class.
