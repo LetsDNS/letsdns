@@ -15,11 +15,10 @@ You should have received a copy of the GNU General Public License along with Let
 If not, see <https://www.gnu.org/licenses/>.
 """
 import unittest
-from logging import WARN
-from logging import basicConfig
 from os import environ
 
 from letsdns.configuration import Config
+from letsdns.main import init_logger
 
 
 def read_config(active_section: str = 'DEFAULT') -> Config:
@@ -39,9 +38,5 @@ class TestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
-        basicConfig(
-            datefmt='%Y-%m-%d %H:%M:%S',
-            format='%(asctime)s %(levelname)s %(message)s',
-            level=WARN
-        )
+        init_logger()
         TestCase.c = read_config()
