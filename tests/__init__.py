@@ -18,7 +18,7 @@ import unittest
 from os import environ
 
 from letsdns.configuration import Config
-from letsdns.main import init_logger
+from letsdns import init_logger
 
 UNITTEST_CONF = 'UNITTEST_CONF'
 

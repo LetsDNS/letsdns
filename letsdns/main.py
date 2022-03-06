@@ -12,17 +12,14 @@
 #
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
-import logging
-import os
-import sys
 from argparse import ArgumentParser
-from logging import basicConfig
 from logging import info
 from logging import warning
 
 from letsdns import HOMEPAGE
 from letsdns import IDENTIFIER
 from letsdns import VERSION
+from letsdns import init_logger
 from letsdns.action import dynamic_action
 from letsdns.action import import_action
 from letsdns.configuration import Config
@@ -69,20 +66,6 @@ def traverse_sections(conf: Config) -> int:
                 _callable(conf, _class())
                 info(f'End{description}')
     return action_count
-
-
-def init_logger() -> None:
-    name = 'LOG_LEVEL'
-    try:
-        if name in os.environ:
-            value = os.environ[name]
-            level = getattr(logging, value.upper())
-        else:
-            level = logging.ERROR
-    except AttributeError as e:
-        print(f'Unsupported {name} value: {e}', file=sys.stderr)
-        sys.exit(1)
-    basicConfig(datefmt='%Y-%m-%d %H:%M:%S', format='%(asctime)s %(levelname)s %(message)s', level=level)
 
 
 if __name__ == '__main__':
