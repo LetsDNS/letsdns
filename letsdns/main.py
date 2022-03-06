@@ -23,6 +23,7 @@ from logging import warning
 from letsdns import HOMEPAGE
 from letsdns import IDENTIFIER
 from letsdns import VERSION
+from letsdns.action import import_action
 from letsdns.configuration import Config
 from letsdns.liveupdate import DnsLiveUpdate
 from letsdns.nsupdate import NsupdateStdout
@@ -40,6 +41,10 @@ def lookup_action(name: str):
     }
     if name in action_map:
         return action_map[name][0], action_map[name][1]
+    elif name.startswith('dynamic:'):
+        name = name.split(':')[1]
+        action_class = import_action(name)
+        return action_dane_tlsa, action_class
     warning(f'Unknown action: {name}')
     return None, None
 
