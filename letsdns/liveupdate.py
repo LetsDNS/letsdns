@@ -54,6 +54,6 @@ class DnsLiveUpdate(Action):
         if name in os.environ:
             s = int(os.environ[name])
         else:
-            s = 30
+            s = 30  # pragma: no cover
         debug(f'DNS timeout: {s} seconds')
         return s
