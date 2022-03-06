@@ -12,20 +12,19 @@
 #
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
-from unittest import TestCase
-
 from letsdns.action import import_action
 from letsdns.action import import_class
+from tests import TestCase
 
 
-class Test(TestCase):
+class ImportTest(TestCase):
     def test_import_missing_class(self):
         with self.assertRaises(ModuleNotFoundError):
             import_class('BAD.CLASS')
 
     def test_import_not_an_action(self):
         with self.assertRaises(TypeError):
-            import_action('letsdns.configuration.Config')
+            import_action('tests.actions.NotAnAction')
 
-    def test_import_ok(self):
-        self.assertIsNotNone(import_action('letsdns.liveupdate.DnsLiveUpdate'))
+    def test_import_action(self):
+        self.assertIsNotNone(import_action('tests.actions.AnAction'))
