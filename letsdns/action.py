@@ -57,10 +57,7 @@ class Action(ABC):
 
     @abstractmethod
     def execute(self, conf: Config, *args, **kwargs) -> int:
-        """Action classes MUST implement this method.
-
-        All unknown positional and keyword arguments unknown to the implementing
-        class MUST be ignored.
+        """Action classes MUST implement this method. Unknown positional and keyword arguments MUST be ignored.
 
         Args:
             conf: Configuration data.
