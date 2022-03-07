@@ -12,22 +12,16 @@
 #
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
-from logging import debug
-
-from letsdns.action import Action
-from letsdns.configuration import Config
+import os
+from logging import debug as _debug
 
 
-class AnAction(Action):
-    def setup(self, conf: Config) -> int:
-        r = super().setup(conf)
-        debug('AnAction.setup')
-        return r
-
-    def execute(self, conf: Config, *args, **kwargs) -> int:
-        return 0
-
-
-class NotAnAction:
-    def foo(self):
-        pass
+def getenv(varname: str, default=None, debug=True):
+    """Return environment variable value if available, otherwise return the default value."""
+    if varname in os.environ:
+        value = os.environ[varname]
+    else:
+        value = default
+    if debug:
+        _debug(f'{varname}={value}')
+    return value

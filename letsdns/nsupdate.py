@@ -14,11 +14,16 @@
 # If not, see <https://www.gnu.org/licenses/>.
 from letsdns.action import Action
 from letsdns.configuration import Config
+from letsdns.tlsa import action_dane_tlsa
 
 
 class NsupdateStdout(Action):
-    def execute(self, conf: Config, *args, **kwargs):
-        """Update DNS record using the dnspython library."""
+    @classmethod
+    def lifecycle(cls, conf: Config, action) -> int:
+        return action_dane_tlsa(conf, action)
+
+    def execute(self, conf: Config, *args, **kwargs) -> int:
+        """Generate 'nsupdate' command list and print to stdout."""
         dataset = kwargs['dataset']
         name = kwargs['name']
         nameserver = conf.get_mandatory('nameserver')
@@ -29,3 +34,4 @@ class NsupdateStdout(Action):
         for data in dataset:
             print(f'update add {name}.{zone}.', ttl, 'IN TLSA', data)
         print('send')
+        return 0

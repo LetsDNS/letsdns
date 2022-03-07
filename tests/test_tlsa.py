@@ -12,7 +12,6 @@
 #
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
-import os
 import socket
 import struct
 from unittest import skipUnless
@@ -25,14 +24,12 @@ from dns.rdataset import Rdataset
 from dns.rdatatype import RdataType
 
 import tests
-from letsdns.configuration import is_truthy
 from letsdns.crypto import dane_tlsa_records
 from letsdns.crypto import read_x509_cert
 from letsdns.liveupdate import DnsLiveUpdate
 from letsdns.tlsa import action_dane_tlsa
-
-ENABLE_DEVELOPER_TESTS = is_truthy(os.environ.get('ENABLE_DEVELOPER_TESTS'))
-ENABLE_ONLINE_TESTS = is_truthy(os.environ.get('ENABLE_ONLINE_TESTS'))
+from tests import ENABLE_DEVELOPER_TESTS
+from tests import ENABLE_ONLINE_TESTS
 
 
 class Test(tests.TestCase):

@@ -20,6 +20,14 @@ letsdns.configuration module
    :no-undoc-members:
    :show-inheritance:
 
+letsdns.core module
+-------------------
+
+.. automodule:: letsdns.core
+   :members:
+   :no-undoc-members:
+   :show-inheritance:
+
 letsdns.crypto module
 ---------------------
 
@@ -32,14 +40,6 @@ letsdns.liveupdate module
 -------------------------
 
 .. automodule:: letsdns.liveupdate
-   :members:
-   :no-undoc-members:
-   :show-inheritance:
-
-letsdns.main module
--------------------
-
-.. automodule:: letsdns.main
    :members:
    :no-undoc-members:
    :show-inheritance:

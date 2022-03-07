@@ -12,11 +12,36 @@
 #
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
+import logging
 import sys
 from configparser import ConfigParser
 from configparser import ExtendedInterpolation
+from logging import basicConfig
 from logging import debug
 from typing import List
+
+from letsdns.util import getenv
+
+LOG_LEVEL = 'LOG_LEVEL'
+
+
+def log_level(default: str = 'ERROR') -> int:
+    """Return logging level, using the LOG_LEVEL environment variable if available.
+
+    Args:
+        default: The default log level.
+    """
+    return getattr(logging, getenv(LOG_LEVEL, default, debug=False).upper())
+
+
+def init_logger() -> None:
+    """Initialise logger."""
+    try:
+        level = log_level()
+        basicConfig(datefmt='%Y-%m-%d %H:%M:%S', format='%(asctime)s %(levelname)s %(message)s', level=level)
+    except AttributeError as e:  # pragma: no cover
+        print(e, file=sys.stderr)
+        sys.exit(1)
 
 
 def is_truthy(something) -> bool:

@@ -13,7 +13,6 @@
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
 import json
-import os
 from logging import debug
 
 from _socket import gethostbyname
@@ -23,10 +22,16 @@ from dns.update import Update
 
 from letsdns.action import Action
 from letsdns.configuration import Config
+from letsdns.tlsa import action_dane_tlsa
+from letsdns.util import getenv
 
 
 class DnsLiveUpdate(Action):
-    def execute(self, conf: Config, *args, **kwargs):
+    @classmethod
+    def lifecycle(cls, conf: Config, action) -> int:
+        return action_dane_tlsa(conf, action)
+
+    def execute(self, conf: Config, *args, **kwargs) -> int:
         """Update DNS record using the dnspython library."""
         dataset = kwargs['dataset']
         name = kwargs['name']
@@ -44,16 +49,7 @@ class DnsLiveUpdate(Action):
             update.replace(name, dataset)
         nameserver = gethostbyname(conf.get_mandatory('nameserver'))
         debug(f'DNS update: {update}')
-        response = query.tcp(update, nameserver, timeout=self.timeout_seconds())
+        timeout = int(getenv('DNS_TIMEOUT_SECONDS', '30'))
+        response = query.tcp(update, nameserver, timeout=timeout)
         debug(f'DNS Response: {response}')
         return response.id
-
-    @staticmethod
-    def timeout_seconds() -> int:
-        name = 'DNS_TIMEOUT_SECONDS'
-        if name in os.environ:
-            s = int(os.environ[name])
-        else:
-            s = 30  # pragma: no cover
-        debug(f'DNS timeout: {s} seconds')
-        return s

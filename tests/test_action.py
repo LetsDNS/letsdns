@@ -13,49 +13,51 @@
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
 import os.path
+from unittest import skipUnless
 
 from letsdns.action import Action
 from letsdns.action import import_action
 from letsdns.action import import_class
 from letsdns.configuration import Config
+from letsdns.core import action_class
+from letsdns.core import traverse_config
 from letsdns.liveupdate import DnsLiveUpdate
-from letsdns.main import dynamic_action
-from letsdns.main import lookup_action
-from letsdns.main import traverse_sections
+from letsdns.nsupdate import NsupdateStdout
+from tests import ENABLE_ONLINE_TESTS
 from tests import TestCase
 from tests import read_config
 
 
 class FailPre(Action):
-    def pre_execute(self, conf: Config) -> int:
+    def setup(self, conf: Config) -> int:
         return -10
 
     def execute(self, conf: Config, *args, **kwargs) -> int:
         return 0
 
-    def post_execute(self, conf: Config) -> int:
+    def teardown(self, conf: Config) -> int:
         return 0
 
 
 class FailExec(Action):
-    def pre_execute(self, conf: Config) -> int:
+    def setup(self, conf: Config) -> int:
         return 0
 
     def execute(self, conf: Config, *args, **kwargs) -> int:
         return -20
 
-    def post_execute(self, conf: Config) -> int:
+    def teardown(self, conf: Config) -> int:
         return 0
 
 
 class FailPost(Action):
-    def pre_execute(self, conf: Config) -> int:
+    def setup(self, conf: Config) -> int:
         return 0
 
     def execute(self, conf: Config, *args, **kwargs) -> int:
         return 0
 
-    def post_execute(self, conf: Config) -> int:
+    def teardown(self, conf: Config) -> int:
         return -30
 
 
@@ -73,29 +75,40 @@ class ImportTest(TestCase):
             import_action('tests.actions.NotAnAction')
 
     def test_lookup_action(self):
-        _callable, _class = lookup_action('dane-tlsa')
-        self.assertIsNotNone(_callable)
-        self.assertTrue(_class == DnsLiveUpdate)
+        self.assertTrue(action_class('dane-tlsa') == DnsLiveUpdate)
 
     def test_unknown_action(self):
-        _callable, _class = lookup_action('BAD')
-        self.assertIsNone(_callable)
-        self.assertIsNone(_class)
+        self.assertIsNone(action_class('BAD'))
 
     def test_callable(self):
-        _callable, _class = lookup_action('dynamic:tests.actions.AnAction')
-        self.assertIsNotNone(_callable)
-        self.assertIsNotNone(_class)
-        _callable(self.c, _class())
+        self.assertIsNotNone(action_class('dynamic:tests.actions.AnAction'))
 
     def test_fail_pre(self):
-        self.assertEqual(-10, dynamic_action(self.c, FailPre()))
+        a = FailPre()
+        self.assertEqual(-10, a.lifecycle(self.c, a))
 
     def test_fail_exec(self):
-        self.assertEqual(-20, dynamic_action(self.c, FailExec()))
+        a = FailExec()
+        self.assertEqual(-20, a.lifecycle(self.c, a))
 
     def test_fail_post(self):
-        self.assertEqual(-30, dynamic_action(self.c, FailPost()))
+        a = FailPost()
+        self.assertEqual(-30, a.lifecycle(self.c, a))
 
     def test_traverse(self):
-        self.assertEqual(1, traverse_sections(self.c))
+        self.assertEqual(1, traverse_config(self.c))
+
+
+class LiveUpdateTest(TestCase):
+    @skipUnless(ENABLE_ONLINE_TESTS, 'online tests disabled')
+    def test_lifecycle(self):
+        self.c.active_section = 'dane'
+        rc = DnsLiveUpdate.lifecycle(self.c, DnsLiveUpdate())
+        self.assertEqual(0, rc)
+
+
+class NsupdateTest(TestCase):
+    def test_lifecycle(self):
+        self.c.active_section = 'dane'
+        rc = NsupdateStdout.lifecycle(self.c, NsupdateStdout())
+        self.assertEqual(0, rc)

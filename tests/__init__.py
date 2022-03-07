@@ -14,12 +14,16 @@ General Public License for more details.
 You should have received a copy of the GNU General Public License along with LetsDNS.
 If not, see <https://www.gnu.org/licenses/>.
 """
+import os
 import unittest
 from os import environ
 
 from letsdns.configuration import Config
-from letsdns import init_logger
+from letsdns.configuration import init_logger
+from letsdns.configuration import is_truthy
 
+ENABLE_DEVELOPER_TESTS = is_truthy(os.environ.get('ENABLE_DEVELOPER_TESTS'))
+ENABLE_ONLINE_TESTS = is_truthy(os.environ.get('ENABLE_ONLINE_TESTS'))
 UNITTEST_CONF = 'UNITTEST_CONF'
 
 

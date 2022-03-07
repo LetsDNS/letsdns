@@ -24,9 +24,35 @@ from letsdns.configuration import Config
 class Action(ABC):
     """Abstract base class for LetsDNS actions."""
 
-    def pre_execute(self, conf: Config) -> int:
+    @classmethod
+    def lifecycle(cls, conf: Config, action) -> int:
+        """Invoke the lifecycle methods of a dynamically imported action. The first non-zero
+        method return code will abort execution and will be returned to the caller.
+
+        Args:
+            conf: Configuration data.
+            action: Action object. Ignored in the default implementation.
+        """
+
+        def _log_rc(method):
+            warning(f'{cls.__name__}.{method} returned code {rc}')
+
+        rc = action.setup(conf)
+        if rc == 0:
+            rc = action.execute(conf)
+            if rc == 0:
+                rc = action.teardown(conf)
+                if rc != 0:
+                    _log_rc('teardown')
+            else:
+                _log_rc('execute')
+        else:
+            _log_rc('setup')
+        return rc
+
+    def setup(self, conf: Config) -> int:
         """Pre-execution phase, for initialisation."""
-        debug(f'{self}.pre_execute({conf})')
+        debug(f'{self}.setup({conf})')
         return 0
 
     @abstractmethod
@@ -43,43 +69,10 @@ class Action(ABC):
         """
         raise NotImplementedError  # pragma: no cover
 
-    def post_execute(self, conf: Config) -> int:
+    def teardown(self, conf: Config) -> int:
         """Post-execution phase, for cleanup."""
-        debug(f'{self}.post_execute({conf})')
+        debug(f'{self}.teardown({conf})')
         return 0
-
-
-def _report(action, method: str, code: int):
-    """Report the return code for an action's method.
-
-    Args:
-        action: Instance object of an 'Action' class.
-        method: Method name.
-        code: Code to report.
-    """
-    warning(f'{action.__class__.__name__}.{method} returned code {code}')
-
-
-def dynamic_action(conf: Config, action: Action) -> int:
-    """Invoke the lifecycle methods of a dynamically imported action. The first non-zero
-    method return code will abort execution and will be returned to the caller.
-
-    Args:
-        conf: Configuration data.
-        action: Instance object of an 'Action' class.
-    """
-    rc = action.pre_execute(conf)
-    if rc == 0:
-        rc = action.execute(conf)
-        if rc == 0:
-            rc = action.post_execute(conf)
-            if rc != 0:
-                _report(action, 'post_execute', rc)
-        else:
-            _report(action, 'execute', rc)
-    else:
-        _report(action, 'pre_execute', rc)
-    return rc
 
 
 def import_class(class_name: str):

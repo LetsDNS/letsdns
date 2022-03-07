@@ -12,17 +12,31 @@
 #
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
+import logging
 import os
 import subprocess
+import unittest
+import uuid
 from configparser import NoOptionError
 from tempfile import NamedTemporaryFile
 
 import tests
 from letsdns.configuration import Config
 from letsdns.configuration import is_truthy
+from letsdns.configuration import log_level
+from letsdns.util import getenv
 
 
 class ConfigurationTest(tests.TestCase):
+    def test_loglevel_bad(self):
+        os.environ['LOG_LEVEL'] = 'BAD'
+        with self.assertRaises(AttributeError):
+            log_level()
+
+    def test_loglevel_good(self):
+        os.environ['LOG_LEVEL'] = 'FATAL'
+        self.assertEqual(logging.FATAL, log_level())
+
     def test_dump(self):
         conf = Config()
         conf.init()
@@ -53,3 +67,10 @@ class ConfigurationTest(tests.TestCase):
     def test_options(self):
         self.c.active_section = 'tlsa'
         self.assertGreater(len(self.c.options()), 5)
+
+
+class UtilTest(unittest.TestCase):
+    def test_getenv(self):
+        u = uuid.uuid4().hex
+        self.assertIsNone(getenv(u))
+        self.assertEqual(-12, getenv(u, default=-12))
