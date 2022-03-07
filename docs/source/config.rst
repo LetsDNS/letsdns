@@ -6,8 +6,11 @@ INI-style text files. A detailed syntax_ description is available at
 Python.org. Please note that LetsDNS uses `extended interpolation`_ of
 values.
 
-.. _syntax: https://docs.python.org/3/library/configparser.html#supported-ini-file-structure
+.. _RFC 2136: https://datatracker.ietf.org/doc/html/rfc2136.html
 .. _extended interpolation: https://docs.python.org/3/library/configparser.html#interpolation-of-values
+.. _nsupdate: https://linux.die.net/man/1/nsupdate
+.. _syntax: https://docs.python.org/3/library/configparser.html#supported-ini-file-structure
+.. _dynamic action: dynaction.html
 
 The option names and values listed below have specific semantics. You
 can define custom options, but do take care when choosing names. To
@@ -21,13 +24,15 @@ horizontal dash).
 
   - dane-tlsa
 
-    Create DANE TLSA records for the certificates defined in a
-    configuration section.
+    Create DANE TLSA records using the DNS Update protocol (see `RFC 2136`_).
 
   - dynamic:*module.containing.YourActionClass*
 
-    Import and execute a dynamic action at runtime. Please see the
-    dedicated documentation section for more information.
+    Import and execute a `dynamic action`_ at runtime.
+
+  - nsupdate-stdout
+
+    Print `nsupdate`_ commands for generating DANE TLSA records to stdout.
 
 - cert_ID_path = */path/to/cert.pem*
 

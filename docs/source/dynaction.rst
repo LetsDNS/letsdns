@@ -17,6 +17,8 @@ Assume further that the Python file action.py contains the following:
 
 You can reference this dynamic action using
 
-    action = dynamic:sample.action.MyAction
+    action = dynamic:sample.action.MyCustomAction
 
-in your configuration files.
+in your `configuration`_ files.
+
+.. _configuration: config.html
