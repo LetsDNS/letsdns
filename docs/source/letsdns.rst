@@ -60,6 +60,14 @@ letsdns.tlsa module
    :no-undoc-members:
    :show-inheritance:
 
+letsdns.util module
+-------------------
+
+.. automodule:: letsdns.util
+   :members:
+   :no-undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 
