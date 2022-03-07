@@ -1,7 +1,7 @@
-# Activate the previously created Python virtual environment
+# Activate the previously created virtual environment
 # and change to your local Git repository clone.
 source /path/to/LetsDNS/.venv/bin/activate
 cd /path/to/LetsDNS/letsdns
 
 # Launch LetsDNS.
-PYTHONPATH=. python letsdns/main.py /path/to/your.conf
+PYTHONPATH=. python -m letsdns /path/to/my.conf
