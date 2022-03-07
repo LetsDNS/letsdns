@@ -22,14 +22,14 @@ from dns.update import Update
 
 from letsdns.action import Action
 from letsdns.configuration import Config
-from letsdns.tlsa import action_dane_tlsa
+from letsdns.tlsa import dane_tlsa
 from letsdns.util import getenv
 
 
 class DnsLiveUpdate(Action):
     @classmethod
     def lifecycle(cls, conf: Config, action) -> int:
-        return action_dane_tlsa(conf, action)
+        return dane_tlsa(conf, action)
 
     def execute(self, conf: Config, *args, **kwargs) -> int:
         """Update DNS record using the dnspython library."""

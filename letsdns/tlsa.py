@@ -26,8 +26,8 @@ from letsdns.crypto import dane_tlsa_records
 from letsdns.crypto import read_x509_cert
 
 
-def action_dane_tlsa(conf: Config, action: Action) -> int:
-    """Update TLSA record."""
+def dane_tlsa(conf: Config, action: Action) -> int:
+    """Update TLSA record. Used as a lifecycle method in the DnsLiveUpdate action class."""
     path_re = re.compile(r'^(cert_\S+)_path$')
     ttl = int(conf.get_mandatory('ttl'))
     hostname = ''

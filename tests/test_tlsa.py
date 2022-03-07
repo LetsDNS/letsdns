@@ -27,7 +27,7 @@ import tests
 from letsdns.crypto import dane_tlsa_records
 from letsdns.crypto import read_x509_cert
 from letsdns.liveupdate import DnsLiveUpdate
-from letsdns.tlsa import action_dane_tlsa
+from letsdns.tlsa import dane_tlsa
 from tests import ENABLE_DEVELOPER_TESTS
 from tests import ENABLE_ONLINE_TESTS
 
@@ -101,4 +101,4 @@ class ActionTest(tests.TestCase):
     @skipUnless(ENABLE_ONLINE_TESTS, 'online tests disabled')
     def test_tlsa(self):
         self.c.active_section = 'dane'
-        action_dane_tlsa(self.c, DnsLiveUpdate())
+        dane_tlsa(self.c, DnsLiveUpdate())
