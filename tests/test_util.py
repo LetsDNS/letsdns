@@ -12,20 +12,31 @@
 #
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
-from unittest import skipUnless
+import uuid
+from os import getenv
 
-from letsdns.hetznerapi import HetznerApiUpdate
-from tests import ENABLE_HETZNER_API_TESTS
-from tests import TestCase
+import tests
+from letsdns.util import is_truthy
 
 
-class HetznerUpdateTest(TestCase):
-    @skipUnless(ENABLE_HETZNER_API_TESTS, 'Hetzner API tests disabled')
-    def test_lifecycle(self):
-        self.c.active_section = 'hetzner'
-        rc = HetznerApiUpdate.lifecycle(self.c, HetznerApiUpdate())
-        self.assertEqual(0, rc)
+class UtilTest(tests.TestCase):
+    def test_getenv(self):
+        u = uuid.uuid4().hex
+        self.assertIsNone(getenv(u))
+        self.assertEqual(-12, getenv(u, default=-12))
 
-    def test_empty_records(self):
-        rc = HetznerApiUpdate().execute(self.c, records=[])
-        self.assertEqual(0, rc)
+    def test_sensitive(self):
+        u = 'API_TOKEN_' + uuid.uuid4().hex
+        self.assertIsNone(getenv(u))
+
+    def test_is_truthy1(self):
+        self.assertFalse(is_truthy('false'))
+
+    def test_is_truthy2(self):
+        self.assertFalse(is_truthy(None))
+
+    def test_is_truthy3(self):
+        self.assertTrue(is_truthy('YES'))
+
+    def test_is_truthy4(self):
+        self.assertTrue(is_truthy(1))

@@ -20,7 +20,7 @@ from os import environ
 
 from letsdns.configuration import Config
 from letsdns.configuration import init_logger
-from letsdns.configuration import is_truthy
+from letsdns.util import is_truthy
 
 ENABLE_DEVELOPER_TESTS = is_truthy(os.environ.get('ENABLE_DEVELOPER_TESTS'))
 ENABLE_HETZNER_API_TESTS = is_truthy(os.environ.get('ENABLE_HETZNER_API_TESTS'))

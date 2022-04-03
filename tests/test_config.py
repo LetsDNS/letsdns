@@ -15,16 +15,12 @@
 import logging
 import os
 import subprocess
-import unittest
-import uuid
 from configparser import NoOptionError
 from tempfile import NamedTemporaryFile
 
 import tests
 from letsdns.configuration import Config
-from letsdns.configuration import is_truthy
 from letsdns.configuration import log_level
-from letsdns.util import getenv
 
 
 class ConfigurationTest(tests.TestCase):
@@ -52,25 +48,6 @@ class ConfigurationTest(tests.TestCase):
         with self.assertRaises(NoOptionError):
             self.c.get_domain()
 
-    def test_is_truthy1(self):
-        self.assertFalse(is_truthy('false'))
-
-    def test_is_truthy2(self):
-        self.assertFalse(is_truthy(None))
-
-    def test_is_truthy3(self):
-        self.assertTrue(is_truthy('YES'))
-
-    def test_is_truthy4(self):
-        self.assertTrue(is_truthy(1))
-
     def test_options(self):
         self.c.active_section = 'tlsa'
         self.assertGreater(len(self.c.options()), 5)
-
-
-class UtilTest(unittest.TestCase):
-    def test_getenv(self):
-        u = uuid.uuid4().hex
-        self.assertIsNone(getenv(u))
-        self.assertEqual(-12, getenv(u, default=-12))

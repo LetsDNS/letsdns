@@ -46,11 +46,7 @@ class HetznerApiUpdate(Action):
     @classmethod
     def lifecycle(cls, conf: Config, action: Action) -> int:
         """Process configuration data."""
-        records = tlsa_records(conf)
-        if len(records) < 1:  # pragma: no cover
-            return 0
-        ttl = int(conf.get_mandatory('ttl'))
-        return action.execute(conf, name=record_name(conf), records=records, ttl=ttl)
+        return action.execute(conf, records=tlsa_records(conf))
 
     def __init__(self) -> None:
         super().__init__()
@@ -110,25 +106,26 @@ class HetznerApiUpdate(Action):
 
     def execute(self, conf: Config, *args, **kwargs) -> int:
         """Update DNS record using the Hetzner DNS API. Return 0 to indicate success."""
+        records: List[str] = kwargs['records']
+        if len(records) < 1:
+            return 0
         self.api_token = conf.get_mandatory('api_token')
         self.headers = {'Auth-API-Token': self.api_token}
         self.api_url = conf.get('api_url', fallback=self.api_url)
-        name = kwargs['name']
-        records: List[str] = kwargs['records']
-        ttl = kwargs['ttl']
         try:
             zone_id = self.zone_id(conf.get_mandatory('domain'))
-            if zone_id is None or not self.cleanup_records(zone_id, name):  # pragma: no cover
-                error('Error while deleting existing TLSA records')
-                return 2
-            if len(records) > 0:
-                data = {
-                    'name': name,
-                    'ttl': ttl,
-                    'type': 'TLSA',
-                    'zone_id': zone_id,
-                }
+            data = {
+                'ttl': conf.get_ttl(),
+                'type': 'TLSA',
+                'zone_id': zone_id,
+            }
+            for port in conf.get_tcp_ports():
+                name = record_name(conf, port)
+                if zone_id is None or not self.cleanup_records(zone_id, name):  # pragma: no cover
+                    error('Error while deleting existing TLSA records')
+                    return 2
                 for record in records:
+                    data['name'] = name
                     data['value'] = record
                     response = requests.post(f'{self.api_url}/records', headers=self.headers, json=data)
                     # Debug response ignoring the actual content

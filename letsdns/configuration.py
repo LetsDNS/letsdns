@@ -13,7 +13,6 @@
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
 import logging
-import re
 import sys
 from configparser import ConfigParser
 from configparser import ExtendedInterpolation
@@ -22,6 +21,8 @@ from logging import debug
 from typing import List
 
 from letsdns.util import getenv
+from letsdns.util import is_sensitive
+from letsdns.util import split
 
 LOG_LEVEL = 'LOG_LEVEL'
 
@@ -32,7 +33,7 @@ def log_level(default: str = 'ERROR') -> int:
     Args:
         default: The default log level.
     """
-    return getattr(logging, getenv(LOG_LEVEL, default, debug=False).upper())
+    return getattr(logging, getenv(LOG_LEVEL, default, debug_env=False).upper())
 
 
 def init_logger() -> None:
@@ -45,31 +46,10 @@ def init_logger() -> None:
         sys.exit(1)
 
 
-def is_truthy(something) -> bool:
-    """Test if 'something' represents boolean True.
-
-    An object represents True if it is (or can be converted to) a string and said
-    string's first character, converted to lowercase, is one of: 1, t, y.
-
-    Args:
-        something: The object to examine.
-    """
-    if not something:
-        return False
-    if isinstance(something, str):
-        s = something
-    else:
-        s = str(something)
-    f = s[:1].lower()
-    t = '1ty'.find(f)
-    return t >= 0
-
-
 class Config:
     """Provide access to configuration data."""
     parser: ConfigParser
     active_section: str  # The currently active configuration section
-    sensitive_name_re = re.compile(r'key|password|token', re.IGNORECASE)
 
     def dump(self, destination=sys.stdout) -> None:
         """Dump configuration state into a file.
@@ -108,7 +88,7 @@ class Config:
             name: Option name.
         """
         v = self.parser.get(self.active_section, name)
-        if self.sensitive_name_re.search(name):
+        if is_sensitive(name):
             debug(f'config: {name} = *****')
         else:
             debug(f'config: {name} = {v}')
@@ -120,6 +100,17 @@ class Config:
         Raise an exception if 'domain' is undefined.
         """
         return self.get_mandatory('domain')
+
+    def get_ttl(self) -> int:
+        """Return the mandatory 'ttl' configuration value (seconds, integer).
+
+        Raise an exception if 'ttl' is undefined.
+        """
+        return int(self.get_mandatory('ttl'))
+
+    def get_tcp_ports(self) -> List[str]:
+        """Return the optional 'tcp_ports' configuration value."""
+        return split(self.get('tcp_ports', fallback='25'))
 
     def options(self) -> List[str]:
         """Return all options in the active section."""

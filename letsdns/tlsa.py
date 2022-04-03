@@ -26,7 +26,7 @@ from letsdns.crypto import dane_tlsa_records
 from letsdns.crypto import read_x509_cert
 
 
-def record_name(conf: Config, tcp_port: int = 25) -> str:
+def record_name(conf: Config, tcp_port: str) -> str:
     """Return TLSA record name for the configured host name.
 
     Args:
@@ -60,8 +60,7 @@ def rdata_action_lifecycle(conf: Config, action: Action) -> int:
     records = tlsa_records(conf)
     if len(records) < 1:  # pragma: no cover
         return 0
-    t = int(conf.get_mandatory('ttl'))
-    rds = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=t)
+    dataset = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=conf.get_ttl())
     for record in records:
-        rds.add(from_text(RdataClass.IN, RdataType.TLSA, record))
-    return action.execute(conf, name=record_name(conf), dataset=rds)
+        dataset.add(from_text(RdataClass.IN, RdataType.TLSA, record))
+    return action.execute(conf, dataset=dataset)

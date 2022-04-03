@@ -25,6 +25,7 @@ from dns.update import Update
 from letsdns.action import Action
 from letsdns.configuration import Config
 from letsdns.tlsa import rdata_action_lifecycle
+from letsdns.tlsa import record_name
 from letsdns.util import getenv
 
 
@@ -43,16 +44,17 @@ class DnsLiveUpdate(Action):
         else:  # pragma: no cover
             keyring = None
         update = Update(zone=zone, keyring=keyring)
-        name = kwargs['name']
-        update.delete(name)
-        dataset = kwargs['dataset']
-        if len(dataset) > 0:
-            update.replace(name, dataset)
-        nameserver = gethostbyname(conf.get_mandatory('nameserver'))
-        debug(f'DNS update: {update}')
-        t = int(getenv('DNS_TIMEOUT_SECONDS', '30'))
-        response: Message = query.tcp(update, nameserver, timeout=t)
-        debug(f'DNS Response: {response}')
-        if rcode.from_flags(response.flags, 0) != rcode.NOERROR:  # pragma: no cover
-            return 1
+        for port in conf.get_tcp_ports():
+            name = record_name(conf, port)
+            update.delete(name)
+            dataset = kwargs['dataset']
+            if len(dataset) > 0:
+                update.replace(name, dataset)
+            nameserver = gethostbyname(conf.get_mandatory('nameserver'))
+            debug(f'DNS update: {update}')
+            t = int(getenv('DNS_TIMEOUT_SECONDS', '30'))
+            response: Message = query.tcp(update, nameserver, timeout=t)
+            debug(f'DNS Response: {response}')
+            if rcode.from_flags(response.flags, 0) != rcode.NOERROR:  # pragma: no cover
+                return 1
         return 0
