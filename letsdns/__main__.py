@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
 from argparse import ArgumentParser
+from logging import debug
 
 from letsdns import HOMEPAGE
 from letsdns import IDENTIFIER
@@ -37,4 +38,5 @@ if __name__ == '__main__':
     if args.showconfig:
         config.dump()
     else:
-        traverse_config(config)
+        n = traverse_config(config)
+        debug(f'Processed {n} action(s)')

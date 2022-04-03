@@ -13,7 +13,7 @@ run-tests:
 
 coverage:
 	$(ENV_VARS) coverage run --include='../letsdns/*' -m unittest discover
-	coverage report
+	coverage report --rcfile=.coveragerc
 
 coverage-html:	coverage
 	coverage html -d $(COVERAGE_DIR) --title='LetsDNS test coverage' --skip-empty --no-skip-covered

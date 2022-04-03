@@ -14,13 +14,13 @@
 # If not, see <https://www.gnu.org/licenses/>.
 from letsdns.action import Action
 from letsdns.configuration import Config
-from letsdns.tlsa import dane_tlsa
+from letsdns.tlsa import rdata_action_lifecycle
 
 
 class NsupdateStdout(Action):
     @classmethod
     def lifecycle(cls, conf: Config, action) -> int:
-        return dane_tlsa(conf, action)
+        return rdata_action_lifecycle(conf, action)
 
     def execute(self, conf: Config, *args, **kwargs) -> int:
         """Generate 'nsupdate' command list and print to stdout."""

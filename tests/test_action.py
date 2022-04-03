@@ -23,7 +23,7 @@ from letsdns.core import action_class
 from letsdns.core import traverse_config
 from letsdns.liveupdate import DnsLiveUpdate
 from letsdns.nsupdate import NsupdateStdout
-from tests import ENABLE_ONLINE_TESTS
+from tests import ENABLE_LIVEUPDATE_TESTS
 from tests import TestCase
 from tests import read_config
 
@@ -100,7 +100,7 @@ class ImportTest(TestCase):
 
 
 class LiveUpdateTest(TestCase):
-    @skipUnless(ENABLE_ONLINE_TESTS, 'online tests disabled')
+    @skipUnless(ENABLE_LIVEUPDATE_TESTS, 'online tests disabled')
     def test_lifecycle(self):
         self.c.active_section = 'dane'
         rc = DnsLiveUpdate.lifecycle(self.c, DnsLiveUpdate())

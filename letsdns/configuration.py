@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
 import logging
+import re
 import sys
 from configparser import ConfigParser
 from configparser import ExtendedInterpolation
@@ -68,6 +69,7 @@ class Config:
     """Provide access to configuration data."""
     parser: ConfigParser
     active_section: str  # The currently active configuration section
+    sensitive_name_re = re.compile(r'key|password|token', re.IGNORECASE)
 
     def dump(self, destination=sys.stdout) -> None:
         """Dump configuration state into a file.
@@ -106,7 +108,10 @@ class Config:
             name: Option name.
         """
         v = self.parser.get(self.active_section, name)
-        debug(f'config: {name} = {v}')
+        if self.sensitive_name_re.search(name):
+            debug(f'config: {name} = *****')
+        else:
+            debug(f'config: {name} = {v}')
         return v
 
     def get_domain(self) -> str:

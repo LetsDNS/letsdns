@@ -36,6 +36,14 @@ letsdns.crypto module
    :no-undoc-members:
    :show-inheritance:
 
+letsdns.hetznerapi module
+-------------------------
+
+.. automodule:: letsdns.hetznerapi
+   :members:
+   :no-undoc-members:
+   :show-inheritance:
+
 letsdns.liveupdate module
 -------------------------
 

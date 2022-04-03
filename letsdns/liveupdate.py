@@ -13,43 +13,46 @@
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
 import json
+from _socket import gethostbyname
 from logging import debug
 
-from _socket import gethostbyname
 from dns import query
+from dns import rcode
 from dns import tsigkeyring
+from dns.message import Message
 from dns.update import Update
 
 from letsdns.action import Action
 from letsdns.configuration import Config
-from letsdns.tlsa import dane_tlsa
+from letsdns.tlsa import rdata_action_lifecycle
 from letsdns.util import getenv
 
 
 class DnsLiveUpdate(Action):
     @classmethod
-    def lifecycle(cls, conf: Config, action) -> int:
-        return dane_tlsa(conf, action)
+    def lifecycle(cls, conf: Config, action: Action) -> int:
+        return rdata_action_lifecycle(conf, action)
 
     def execute(self, conf: Config, *args, **kwargs) -> int:
-        """Update DNS record using the dnspython library."""
-        dataset = kwargs['dataset']
-        name = kwargs['name']
-        keyfile = conf.get('keyfile')
+        """Update DNS record using the dnspython library. Return 0 to indicate success."""
         zone = conf.get_mandatory('domain')
-        if keyfile:
-            with open(keyfile, 'r') as f:
-                obj = json.load(f)
-                keyring = tsigkeyring.from_text(obj)
+        path = conf.get('keyfile')
+        if path:
+            with open(path, 'r') as f:
+                keyring = tsigkeyring.from_text(json.load(f))
         else:  # pragma: no cover
             keyring = None
         update = Update(zone=zone, keyring=keyring)
+        name = kwargs['name']
         update.delete(name)
+        dataset = kwargs['dataset']
         if len(dataset) > 0:
             update.replace(name, dataset)
         nameserver = gethostbyname(conf.get_mandatory('nameserver'))
         debug(f'DNS update: {update}')
-        timeout = int(getenv('DNS_TIMEOUT_SECONDS', '30'))
-        response = query.tcp(update, nameserver, timeout=timeout)
+        t = int(getenv('DNS_TIMEOUT_SECONDS', '30'))
+        response: Message = query.tcp(update, nameserver, timeout=t)
         debug(f'DNS Response: {response}')
-        return response.id
+        if rcode.from_flags(response.flags, 0) != rcode.NOERROR:  # pragma: no cover
+            return 1
+        return 0

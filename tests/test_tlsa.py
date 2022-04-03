@@ -27,9 +27,8 @@ import tests
 from letsdns.crypto import dane_tlsa_records
 from letsdns.crypto import read_x509_cert
 from letsdns.liveupdate import DnsLiveUpdate
-from letsdns.tlsa import dane_tlsa
 from tests import ENABLE_DEVELOPER_TESTS
-from tests import ENABLE_ONLINE_TESTS
+from tests import ENABLE_LIVEUPDATE_TESTS
 
 
 class Test(tests.TestCase):
@@ -38,7 +37,7 @@ class Test(tests.TestCase):
         self.update = DnsLiveUpdate()
 
     @classmethod
-    @skipUnless(ENABLE_ONLINE_TESTS, 'online tests disabled')
+    @skipUnless(ENABLE_LIVEUPDATE_TESTS, 'online tests disabled')
     def tearDownClass(cls) -> None:
         super().tearDownClass()
         ds = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=3)
@@ -46,16 +45,16 @@ class Test(tests.TestCase):
         u.execute(cls.c, name='_25._tcp', dataset=ds)
         u.execute(cls.c, name='test', dataset=ds)
 
-    @skipUnless(ENABLE_ONLINE_TESTS, 'online tests disabled')
+    @skipUnless(ENABLE_LIVEUPDATE_TESTS, 'online tests disabled')
     def test_update_dns(self):
         self.c.active_section = 'tlsa'
         rd = from_text(RdataClass.IN, RdataType.TLSA, tok='3 1 1 1234')
         ds = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=3)
         ds.add(rd)
-        id_ = self.update.execute(self.c, name='test', dataset=ds)
-        self.assertGreater(id_, 0)
+        rc = self.update.execute(self.c, name='test', dataset=ds)
+        self.assertEqual(0, rc)
 
-    @skipUnless(ENABLE_ONLINE_TESTS, 'online tests disabled')
+    @skipUnless(ENABLE_LIVEUPDATE_TESTS, 'online tests disabled')
     def test_bad_ttl(self):
         self.c.active_section = 'bad_ttl'
         rd = from_text(RdataClass.IN, RdataType.TLSA, tok='2 0 1 abcd')
@@ -98,7 +97,7 @@ class CertTest(tests.TestCase):
 
 
 class ActionTest(tests.TestCase):
-    @skipUnless(ENABLE_ONLINE_TESTS, 'online tests disabled')
+    @skipUnless(ENABLE_LIVEUPDATE_TESTS, 'online tests disabled')
     def test_tlsa(self):
         self.c.active_section = 'dane'
-        dane_tlsa(self.c, DnsLiveUpdate())
+        DnsLiveUpdate.lifecycle(self.c, DnsLiveUpdate())

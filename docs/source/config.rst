@@ -6,11 +6,12 @@ INI-style text files. A detailed syntax_ description is available at
 Python.org. Please note that LetsDNS uses `extended interpolation`_ of
 values.
 
-.. _RFC 2136: https://datatracker.ietf.org/doc/html/rfc2136.html
-.. _extended interpolation: https://docs.python.org/3/library/configparser.html#interpolation-of-values
-.. _nsupdate: https://linux.die.net/man/1/nsupdate
-.. _syntax: https://docs.python.org/3/library/configparser.html#supported-ini-file-structure
 .. _dynamic action: dynaction.html
+.. _extended interpolation: https://docs.python.org/3/library/configparser.html#interpolation-of-values
+.. _Hetzner DNS API: https://dns.hetzner.com/api-docs
+.. _nsupdate: https://linux.die.net/man/1/nsupdate
+.. _RFC 2136: https://datatracker.ietf.org/doc/html/rfc2136.html
+.. _syntax: https://docs.python.org/3/library/configparser.html#supported-ini-file-structure
 
 The option names and values listed below have specific semantics. You
 can define custom options, but do take care when choosing names. To
@@ -30,9 +31,21 @@ horizontal dash).
 
     Import and execute a `dynamic action`_ at runtime.
 
+  - hetzner-tlsa
+
+    Create DANE TLSA records using the `Hetzner DNS API`_.
+
   - nsupdate-stdout
 
     Print `nsupdate`_ commands for generating DANE TLSA records to stdout.
+
+- api_token = *string*
+
+  API access token. Required when using the *hetzner-tlsa* action.
+
+- api_url = *URL*
+
+  Optional URL for the Hetzner DNS API (default: https://dns.hetzner.com/api/v1)
 
 - cert_ID_path = */path/to/cert.pem*
 

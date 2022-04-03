@@ -23,7 +23,8 @@ from letsdns.configuration import init_logger
 from letsdns.configuration import is_truthy
 
 ENABLE_DEVELOPER_TESTS = is_truthy(os.environ.get('ENABLE_DEVELOPER_TESTS'))
-ENABLE_ONLINE_TESTS = is_truthy(os.environ.get('ENABLE_ONLINE_TESTS'))
+ENABLE_HETZNER_API_TESTS = is_truthy(os.environ.get('ENABLE_HETZNER_API_TESTS'))
+ENABLE_LIVEUPDATE_TESTS = is_truthy(os.environ.get('ENABLE_LIVEUPDATE_TESTS'))
 UNITTEST_CONF = 'UNITTEST_CONF'
 
 

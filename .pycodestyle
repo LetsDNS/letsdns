@@ -1,0 +1,6 @@
+[pycodestyle]
+max-line-length = 128
+count = True
+show-pep8 = True
+show-source = True
+statistics = True

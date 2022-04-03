@@ -18,12 +18,14 @@ from typing import Optional
 from letsdns.action import Action
 from letsdns.action import import_action
 from letsdns.configuration import Config
+from letsdns.hetznerapi import HetznerApiUpdate
 from letsdns.liveupdate import DnsLiveUpdate
 from letsdns.nsupdate import NsupdateStdout
 
 _ACTION_CLASS_MAP = {
     # Read-only mapping from action name to action class
     'dane-tlsa': DnsLiveUpdate,
+    'hetzner-tlsa': HetznerApiUpdate,
     'nsupdate-stdout': NsupdateStdout,
 }
 
@@ -44,12 +46,12 @@ def action_class(name: str) -> Optional[Action]:
 
 
 def traverse_config(conf: Config) -> int:
-    """Traverse and process the configuration sections and return the number of processed actions.
+    """Traverse and process the configuration sections. Return the number of processed actions.
 
     Args:
         conf: Configuration object.
     """
-    processed = 0
+    counter = 0
     for section in conf.parser.sections():
         conf.active_section = section
         info(f'Config section: {section}')
@@ -62,5 +64,5 @@ def traverse_config(conf: Config) -> int:
                 # noinspection PyCallingNonCallable
                 _class.lifecycle(conf, _class())
                 info(f'End{description}')
-                processed += 1
-    return processed
+                counter += 1
+    return counter

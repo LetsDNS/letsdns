@@ -1,10 +1,12 @@
 # Runtime
 cryptography
 dnspython
+requests
 
 # Software development
 build
 coverage
+pycodestyle
 setuptools
 twine
 wheel

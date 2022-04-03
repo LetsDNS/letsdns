@@ -26,24 +26,42 @@ from letsdns.crypto import dane_tlsa_records
 from letsdns.crypto import read_x509_cert
 
 
-def dane_tlsa(conf: Config, action: Action) -> int:
-    """Update TLSA record. Used as a lifecycle method in the DnsLiveUpdate action class."""
+def record_name(conf: Config, tcp_port: int = 25) -> str:
+    """Return TLSA record name for the configured host name.
+
+    Args:
+        conf: Configuration object.
+        tcp_port: Desired TCP service port, default 25.
+    """
+    h = conf.get_mandatory('hostname')
+    return f'_{tcp_port}._tcp.{h}'
+
+
+def tlsa_records(conf: Config) -> List[str]:
+    """Generate list of TLSA record strings based on the given configuration options.
+
+    Args:
+        conf: Configuration object.
+    """
     path_re = re.compile(r'^(cert_\S+)_path$')
-    ttl = int(conf.get_mandatory('ttl'))
-    hostname = ''
-    tlsa_records: List[str] = list()
+    records: List[str] = []
     for option in conf.options():
         if path_re.match(option):
-            filename = conf.get_mandatory(option)
-            hostname = conf.get_mandatory('hostname')
-            cert = read_x509_cert(filename)
+            path = conf.get_mandatory(option)
+            cert = read_x509_cert(path)
             for record in dane_tlsa_records(cert):
-                if record not in tlsa_records:
-                    tlsa_records.append(record)
-    if hostname and len(tlsa_records) > 0:
-        rdata_set = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=ttl)
-        for tlsa in tlsa_records:
-            rdata = from_text(RdataClass.IN, RdataType.TLSA, tlsa)
-            rdata_set.add(rdata)
-        action.execute(conf, dataset=rdata_set, name=f'_25._tcp.{hostname}')
-    return 0
+                if record not in records:
+                    records.append(record)
+    return records
+
+
+def rdata_action_lifecycle(conf: Config, action: Action) -> int:
+    """Lifecycle method for Rdata-based actions."""
+    records = tlsa_records(conf)
+    if len(records) < 1:  # pragma: no cover
+        return 0
+    t = int(conf.get_mandatory('ttl'))
+    rds = Rdataset(RdataClass.IN, RdataType.TLSA, ttl=t)
+    for record in records:
+        rds.add(from_text(RdataClass.IN, RdataType.TLSA, record))
+    return action.execute(conf, name=record_name(conf), dataset=rds)
