@@ -71,6 +71,11 @@ horizontal dash).
   Host name or IP address for your nameserver. Name resolution is
   delegated to your OS.
 
+- tcp_ports = *port [...]*
+
+  List of TCP service port numbers in the range 1-65535, separated with spaces
+  or commas, for which TLSA records should be generated. Default: 25.
+
 - ttl = *seconds*
 
   DNS record time-to-live, in seconds.
