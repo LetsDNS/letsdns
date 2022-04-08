@@ -9,7 +9,7 @@ VERSIONQ	= '$(VERSION)'
 .PHONY:	clean dist help prep push pypi-upload setver
 
 help:
-	@echo >&2 "Usage: make {clean | dist | push | setver}"
+	@$(info Usage: make {clean | dist | push | pypi-upload | setver})
 	@exit 1
 
 prep:
