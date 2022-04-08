@@ -1,9 +1,9 @@
 # LetsDNS
 
-Manage DANE TLSA records in DNS servers. Supports multiple domains with multiple TLS certificates each.  LetsDNS can be
+Manage DANE TLSA records in DNS servers. Supports multiple domains with multiple TLS certificates each. LetsDNS can be
 invoked manually, from cron jobs, or called in hook functions of ACME-clients like [dehydrated](https://dehydrated.io)
 or [certbot](https://eff-certbot.readthedocs.io).
 
 Documentation is available on the [LetsDNS homepage](https://letsdns.org/).
 
-Copyright © 2022 Ralph Seichter.
+Copyright © 2022 Ralph Seichter. Hosted on [GitHub](https://github.com/LetsDNS/letsdns).
