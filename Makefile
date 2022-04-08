@@ -6,8 +6,6 @@ VERSION		?= $(shell echo "1.0.dev$$(date -u +'%j%H%M' | sed -e 's/^0//')")
 VENV		= $(shell realpath .venv)
 VERSIONQ	= '$(VERSION)'
 
-PKG	= scripts/package
-
 .PHONY:	clean dist help prep push pypi-upload setver
 
 help:
