@@ -1,10 +1,10 @@
-# vim:ts=8:sw=8:noet
+# vim:ts=4:sw=4:noet
 
-RSYNC_OPTS	?= --compress --delete --ipv6 --recursive --rsh=ssh --times --verbose
-SED_INPLACE	?= /opt/local/bin/gsed -i''
+RSYNC_OPTS		?= --compress --delete --ipv6 --recursive --rsh=ssh --times --verbose
+SED_INPLACE		?= /opt/local/bin/gsed -i''
 SPHINX_BUILD	?= env PYTHONPATH=.. sphinx-build
-SPHINX_OPTS	?=
-SPHINX_DEST	= build
+SPHINX_OPTS		?=
+SPHINX_DEST		= build
 SPHINX_SOURCE	= source
 
 .PHONY:	Makefile apidoc cibuild help install-reqs publish
