@@ -22,7 +22,8 @@ from letsdns.configuration import Config
 from letsdns.configuration import init_logger
 from letsdns.core import traverse_config
 
-if __name__ == '__main__':
+
+def main():
     init_logger()
     parser = ArgumentParser(
         description=f'LetsDNS {VERSION} - Manage DANE TLSA records in DNS servers.',
@@ -40,3 +41,7 @@ if __name__ == '__main__':
     else:
         n = traverse_config(config)
         debug(f'Processed {n} action(s)')
+
+
+if __name__ == '__main__':
+    main()
