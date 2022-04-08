@@ -1,9 +1,7 @@
 Installation
 ============
 
-The installation procss currently requires several steps. I recommend using a
-dedicated Python virtual environment. The following commands show how LetsDNS
-can be installed using a BASH compatible shell:
+The following commands show how LetsDNS can be installed using a BASH compatible shell:
 
 .. literalinclude:: _static/bash-install
 

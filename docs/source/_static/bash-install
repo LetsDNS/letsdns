@@ -1,14 +1,13 @@
-# Create local base directory.
-mkdir /path/to/LetsDNS
-cd /path/to/LetsDNS
+# Download install script using cURL, wget, or similar.
+curl -fso install.sh https://raw.githubusercontent.com/LetsDNS/letsdns/master/scripts/install.sh
 
-# Create and activate Python version 3.7 or newer virtual environment.
-python3.9 -m venv .venv
-source .venv/bin/activate
+# Optional: Verify that the downloaded script does not
+# do anything nasty, using Mark I Eyeball checks.
+cat install.sh
 
-# Clone Git repository
-git clone https://github.com/LetsDNS/letsdns.git
+# Mark downloaded script as executable.
+chmod 0700 install.sh
 
-# Install dependencies
-cd letsdns
-pip install -r requirements.txt
+# Execute script, modifying the destination directory
+# according to personal taste/needs.
+./install.sh /var/lib/letsdns
