@@ -2,9 +2,8 @@
 
 PYPI_REPO	?= testpypi
 SED_INPLACE	?= /opt/local/bin/gsed -i''
-VERSION		?= $(shell echo "1.0.dev$$(date -u +'%j%H%M' | sed -e 's/^0//')")
 VENV		= $(shell realpath .venv)
-VERSIONQ	= '$(VERSION)'
+VERSION		?= $(shell echo "1.0.dev$$(date -u +'%j%H%M' | sed -e 's/^0//')")
 
 .PHONY:	clean dist help prep push pypi-upload setver
 
@@ -18,7 +17,7 @@ prep:
 clean:	prep
 	rm -fr dist/*
 
-dist:
+dist:	prep
 	python -m build
 
 push:
@@ -28,5 +27,5 @@ pypi-upload:	prep
 	twine upload --sign --identity 6AE2A84723D56D985B340BC08E5FA4709F69E911 --repository $(PYPI_REPO) dist/*
 
 setver:
-	$(SED_INPLACE) -E -e "s/(^VERSION =).*/\1 $(VERSIONQ)/" letsdns/__init__.py
+	$(SED_INPLACE) -E -e "s/(^VERSION =).*/\1 '$(VERSION)'/" letsdns/__init__.py
 	$(SED_INPLACE) -E -e "s/(^version =).*/\1 $(VERSION)/" setup.cfg
