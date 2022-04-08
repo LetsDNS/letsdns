@@ -14,10 +14,10 @@ help:
 prep:
 	@which pip | grep -q '^$(VENV)/bin/pip' || (echo 'Please execute:\n\n  source $(VENV)/bin/activate\n'; exit 1)
 
-clean:	prep
+clean:
 	rm -fr dist/*
 
-dist:	prep
+dist:
 	python -m build
 
 push:
