@@ -28,13 +28,18 @@ from letsdns.crypto import read_x509_cert
 
 def record_name(conf: Config, tcp_port: str) -> str:
     """Return TLSA record name for the configured host name.
+    A single dot '.' host name denotes the domain apex.
 
     Args:
         conf: Configuration object.
         tcp_port: Desired TCP service port, default 25.
     """
     h = conf.get_mandatory('hostname')
-    return f'_{tcp_port}._tcp.{h}'
+    if h == '.':
+        suffix = ''
+    else:
+        suffix = f'.{h}'
+    return f'_{tcp_port}._tcp{suffix}'
 
 
 def tlsa_records(conf: Config) -> List[str]:
@@ -43,7 +48,7 @@ def tlsa_records(conf: Config) -> List[str]:
     Args:
         conf: Configuration object.
     """
-    path_re = re.compile(r'^(cert_\S+)_path$')
+    path_re = re.compile(r'^cert_\S+_path$')
     records: List[str] = []
     for option in conf.options():
         if path_re.match(option):

@@ -62,9 +62,10 @@ horizontal dash).
 
   Fully qualified name of the domain or subdomain to be operated on.
 
-- hostname = *somehost*
+- hostname = *somehost | .*
 
-  Short hostname without domain. Required for the *dane-tlsa* action.
+  Either a hostname without domain, or a single dot character. The latter
+  denotes the domain apex.
 
 - keyfile = */path/to/key.json*
 

@@ -27,11 +27,12 @@ import tests
 from letsdns.crypto import dane_tlsa_records
 from letsdns.crypto import read_x509_cert
 from letsdns.liveupdate import DnsLiveUpdate
+from letsdns.tlsa import record_name
 from tests import ENABLE_DEVELOPER_TESTS
 from tests import ENABLE_LIVEUPDATE_TESTS
 
 
-class Test(tests.TestCase):
+class TlsaTest(tests.TestCase):
     def setUp(self) -> None:
         super().setUp()
         self.update = DnsLiveUpdate()
@@ -54,7 +55,6 @@ class Test(tests.TestCase):
         rc = self.update.execute(self.c, name='test', dataset=ds)
         self.assertEqual(0, rc)
 
-    @skipUnless(ENABLE_LIVEUPDATE_TESTS, 'online tests disabled')
     def test_bad_ttl(self):
         self.c.active_section = 'bad_ttl'
         rd = from_text(RdataClass.IN, RdataType.TLSA, tok='2 0 1 abcd')
@@ -67,6 +67,16 @@ class Test(tests.TestCase):
         self.c.active_section = 'bad_ns'
         with self.assertRaises(socket.gaierror):
             self.update.execute(self.c, name='test', dataset=Rdataset(RdataClass.IN, RdataType.TLSA, ttl=3))
+
+    def test_record_name(self):
+        x = record_name(self.c, '98')
+        h = self.c.get_mandatory('hostname')
+        self.assertEqual(f'_98._tcp.{h}', x)
+
+    def test_record_name_apex(self):
+        self.c.active_section = 'apex'
+        x = record_name(self.c, '76')
+        self.assertEqual('_76._tcp', x)
 
 
 @skipUnless(ENABLE_DEVELOPER_TESTS, 'developer tests disabled')
