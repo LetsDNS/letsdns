@@ -1,5 +1,5 @@
-# Download install script using cURL, wget, or similar.
-curl -fso install.sh https://raw.githubusercontent.com/LetsDNS/letsdns/master/scripts/install.sh
+# Download install script using wget, cURL, or similar.
+wget https://raw.githubusercontent.com/LetsDNS/letsdns/master/scripts/install.sh
 
 # Optional: Verify that the downloaded script does not
 # do anything nasty, using Mark I Eyeball checks.
