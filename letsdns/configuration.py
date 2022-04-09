@@ -102,11 +102,8 @@ class Config:
         return self.get_mandatory('domain')
 
     def get_ttl(self) -> int:
-        """Return the mandatory 'ttl' configuration value (seconds, integer).
-
-        Raise an exception if 'ttl' is undefined.
-        """
-        return int(self.get_mandatory('ttl'))
+        """Return the 'ttl' configuration value (seconds, integer)."""
+        return int(self.get('ttl', fallback='1800'))
 
     def get_tcp_ports(self) -> List[str]:
         """Return the optional 'tcp_ports' configuration value."""
