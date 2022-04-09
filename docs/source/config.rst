@@ -54,6 +54,10 @@ horizontal dash).
   certificates as you need, limited only by available disk space and
   memory.
 
+  Note that LetsDNS automatically deduplicates TLSA records, which implies
+  that the number of records created may be lower than the number of
+  cert_ID_path entries in your configuration.
+
 - domain = *example.com*
 
   Fully qualified name of the domain or subdomain to be operated on.
@@ -64,18 +68,21 @@ horizontal dash).
 
 - keyfile = */path/to/key.json*
 
-  JSON file containing the TSIG keys required for DNS access.
+  JSON file containing the TSIG keys required for DNS access. The file must
+  contain a {"textual-dns-name": "base64-encoded-secret"} pair.
 
 - nameserver = *hostname | ip-address*
 
   Host name or IP address for your nameserver. Name resolution is
   delegated to your OS.
 
-- tcp_ports = *port [...]*
+- tcp_ports = *port [port [...]]*
 
   List of TCP service port numbers in the range 1-65535, separated with spaces
   or commas, for which TLSA records should be generated. Default: 25.
 
 - ttl = *seconds*
 
-  DNS record time-to-live, in seconds.
+  DNS record time-to-live, in seconds. Default: 1800. Values of more than one
+  hour may cause issues due to prolonged caching, depending on your roll-over
+  strategy for certificates.
