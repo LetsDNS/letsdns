@@ -2,4 +2,4 @@
 source /var/lib/letsdns/.venv/bin/activate
 
 # Launch LetsDNS.
-letsdns /path/to/my.conf
+letsdns /path/to/myconf.ini

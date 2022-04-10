@@ -5,9 +5,8 @@ wget https://raw.githubusercontent.com/LetsDNS/letsdns/master/scripts/install.sh
 # do anything nasty, using Mark I Eyeball checks.
 cat install.sh
 
-# Mark downloaded script as executable.
+# Mark the downloaded script as executable.
 chmod 0700 install.sh
 
-# Execute script, modifying the destination directory
-# according to personal taste/needs.
+# Execute script, providing a destination directory of your liking.
 ./install.sh /var/lib/letsdns

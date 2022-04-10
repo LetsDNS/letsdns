@@ -5,7 +5,7 @@ The following environment variables are supported by LetsDNS:
 
 - DNS_TIMEOUT_SECONDS
 
-  Timeout for DNS access operations. Default: 30 seconds.
+  Timeout for DNS access operations, in seconds. Default: 30.
 
 - LOG_LEVEL
 

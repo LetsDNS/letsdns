@@ -14,7 +14,7 @@ project_copyright = '2022 Ralph Seichter'
 author = 'Ralph Seichter'
 
 # The short X.Y version
-version = '0.1'
+version = 'latest'
 # The full version, including alpha/beta/rc tags
 release = VERSION
 
@@ -36,4 +36,4 @@ templates_path = ['_templates']
 
 # Options for HTML output.
 html_static_path = ['_static']
-html_theme = 'alabaster'
+html_theme = 'sphinx_rtd_theme'
