@@ -15,7 +15,6 @@ Copyright © 2022 Ralph Seichter. Hosted on `GitHub`_.
 
 .. toctree::
     :maxdepth: 3
-    :caption: Contents:
 
     install
     config
@@ -24,8 +23,10 @@ Copyright © 2022 Ralph Seichter. Hosted on `GitHub`_.
     envvar
     dynaction
 
-    letsdns
+    contrib
     license
+
+    letsdns
 
 
 Indices and tables
