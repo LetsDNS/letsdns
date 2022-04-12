@@ -14,7 +14,7 @@ project_copyright = '2022 Ralph Seichter'
 author = 'Ralph Seichter'
 
 # The short X.Y version
-version = '1.0'
+version = 'latest'
 # The full version, including alpha/beta/rc tags
 release = VERSION
 
