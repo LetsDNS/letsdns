@@ -1,7 +1,9 @@
 Operation
 =========
 
-To run LetsDNS in a BASH compatible shell, you can use the following commands:
+To run LetsDNS in a BASH compatible shell, you can use the commands below. LetsDNS does **not** require *root*
+privileges. Read access to the configuration files and certificates suffices. The system account of your ACME client is
+usually a good choice.
 
 .. literalinclude:: _static/bash-run
 

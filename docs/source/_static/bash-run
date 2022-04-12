@@ -1,5 +1,1 @@
-# Activate the previously created virtual environment.
-source /var/lib/letsdns/.venv/bin/activate
-
-# Launch LetsDNS.
 letsdns /path/to/myconf.ini

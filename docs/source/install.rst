@@ -1,25 +1,24 @@
 Installation
 ============
 
-Method 1: Isolated environment
-------------------------------
+Recommended: Python package
+---------------------------
 
-LetsDNS is currently in a pre-release state, and you might want to use it in an isolated execution environment, i.e. a
-Python virtual environment. I provide an install script which does just that, and the following commands show how to
-invoke the script in a BASH compatible shell. Note that this method is feasible for a non-*root* user.
+LetsDNS can be installed using the `Python Package Index`_. System-wide installation of Python packages usually requires
+*root* privileges.
+
+.. literalinclude:: _static/pip-install
+
+.. _Python Package Index: https://pypi.org/project/letsdns/
+
+Alternative: Virtual environment
+--------------------------------
+
+You can use LetsDNS in an isolated virtual environment, even as a non-*root* user. I provide an install script to create
+such an environment from scratch. The following commands show how to invoke the script in a BASH compatible shell.
 
 .. literalinclude:: _static/venv-install
 
 Before launching LetsDNS for the first time, you need to create a `configuration`_ file.
 
 .. _configuration: config.html
-
-Method 2: Python package
-------------------------
-
-As an alternative, LetsDNS can be installed system-wide, using the official Python package available from `PyPI`_.
-This might require *root* privileges.
-
-.. literalinclude:: _static/pip-install
-
-.. _PyPI: https://pypi.org/project/letsdns/
