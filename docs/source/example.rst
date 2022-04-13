@@ -16,7 +16,7 @@ The sequence of events is as follows:
 
 2. If a new certificate is obtained, dehydrated stores ("queues") this certificates in the directory /var/lib/dehydrated/certs/example.com. Using dehydrated's deploy_cert() hook funktion, LetsDNS is then launched with the configuration file shown above.
 
-3. LetsDNS connects to nameserver *ns1.example.com* using the provided keyfile for authentication, and generates TLSA records for both the queued and the currently active certificate, which is located in /etc/postfix/tls. It also generates a record for the Let's Encrypt "R3" Certificate Authority.
+3. LetsDNS connects to nameserver *ns1.example.com* using the provided keyfile for authentication, and generates TLSA records for both the queued and the currently active certificate, which is located in /etc/postfix/tls. It also generates records for the Let's Encrypt "R3" Certificate Authority.
 
 4. Assuming that the TTL is no longer than an hour, it is safe to either copy or move the queued certificate over the active certificate a day later, and restart Postfix. This can be achieved using another cron job, running daily at 23:45.
 

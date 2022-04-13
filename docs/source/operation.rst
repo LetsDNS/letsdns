@@ -13,5 +13,5 @@ to launch LetsDNS with a variable number of arguments:
 .. literalinclude:: _static/bash-wildcard
 
 This BASH example invokes LetsDNS with all matching files. It allows you to place additional configuration files into
-the */etc/letsdns* directory if the number of domains changes. These files might even be dynamically generated during
+the /etc/letsdns directory if the number of domains changes. These files might even be dynamically generated during
 certificate retrieval.

@@ -14,6 +14,6 @@ existing discussions/issues if possible, in order to avoid duplicates and scatte
 
 LetsDNS is in its early stages and I do not accept any code or documentation contributions at this time. When the
 project has matured enough, I will announce the conditions for contributing. Until then, please do not submit any Git
-merge/pull requests.
+pull requests.
 
 Thank you for your patience.
