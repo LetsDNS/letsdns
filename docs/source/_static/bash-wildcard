@@ -1,1 +1,1 @@
-letsdns /var/lib/letsdns/*.ini
+letsdns /etc/letsdns/*.ini

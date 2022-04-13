@@ -80,7 +80,8 @@ horizontal dash).
 - tcp_ports = *port [port [...]]*
 
   List of TCP service port numbers in the range 1-65535, separated with spaces
-  or commas, for which TLSA records should be generated. Default: 25.
+  or commas, for which TLSA records should be generated. Default: 25. Different
+  ports can be used for other services, i.e. port 443 for HTTPS.
 
 - ttl = *seconds*
 

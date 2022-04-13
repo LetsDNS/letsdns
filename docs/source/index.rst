@@ -16,9 +16,9 @@ Copyright © 2022 Ralph Seichter. Hosted on `GitHub`_.
 .. toctree::
     :maxdepth: 3
 
+    example
     install
     config
-    example
     operation
     envvar
     dynaction

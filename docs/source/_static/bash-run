@@ -1,1 +1,1 @@
-letsdns /path/to/myconf.ini
+letsdns /etc/letsdns/myconf.ini
