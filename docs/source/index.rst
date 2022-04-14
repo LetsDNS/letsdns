@@ -23,6 +23,7 @@ Copyright © 2022 Ralph Seichter. Hosted on `GitHub`_.
     dynaction
 
     contrib
+    changelog
     license
 
     letsdns
