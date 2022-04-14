@@ -6,6 +6,7 @@ INI-style text files. A detailed syntax_ description is available at
 Python.org. Please note that LetsDNS uses `extended interpolation`_ of
 values.
 
+.. _BIND 9: https://bind9.readthedocs.io/en/latest/
 .. _dynamic action: dynaction.html
 .. _extended interpolation: https://docs.python.org/3/library/configparser.html#interpolation-of-values
 .. _Hetzner DNS API: https://dns.hetzner.com/api-docs
@@ -26,14 +27,19 @@ horizontal dash).
   - dane-tlsa
 
     Create DANE TLSA records using the DNS Update protocol (see `RFC 2136`_).
+    If your nameserver is running on the same machine as LetsDNS, or if it is
+    accessible over a network connection, using this action is usually the
+    most convenient way to publish DNS records.
 
   - dynamic:*module.containing.YourActionClass*
 
-    Import and execute a `dynamic action`_ at runtime.
+    Import and execute a `dynamic action`_ at runtime. Unless you are faced with
+    an untypical or advanced use case, you probably won't need this.
 
   - hetzner-tlsa
 
-    Create DANE TLSA records using the `Hetzner DNS API`_.
+    Create DANE TLSA records using the `Hetzner DNS API`_. This action requires
+    an API token for write access.
 
   - nsupdate-stdout
 
@@ -70,7 +76,10 @@ horizontal dash).
 - keyfile = */path/to/key.json*
 
   JSON file containing the TSIG keys required for DNS access. The file must
-  contain a {"textual-dns-name": "base64-encoded-secret"} pair.
+  contain a {"textual-dns-name": "base64-encoded-secret"} pair. For example,
+  if your `BIND 9`_ nameserver permits access via
+  ``key "mykey" { algorithm hmac-sha256; secret "c2VjcmV0Cg=="; };``
+  the matching JSON content is ``{"mykey": "c2VjcmV0Cg=="}``.
 
 - nameserver = *hostname | ip-address*
 

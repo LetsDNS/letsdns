@@ -1,13 +1,11 @@
-# Configuration file for the Sphinx documentation builder.
 # See https://www.sphinx-doc.org/en/master/usage/configuration.html
+# vim:ts=4:sw=4:et
 import os
 import sys
 
 from letsdns import VERSION
 
 sys.path.insert(0, os.path.abspath('..'))
-
-# -- Project information -----------------------------------------------------
 
 project = 'LetsDNS'
 project_copyright = '2022 Ralph Seichter'
@@ -29,11 +27,9 @@ extensions = [
 exclude_patterns = [
     ".DS_Store",
     "_build",
+    "build",
 ]
 
-# Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
-
-# Options for HTML output.
+html_favicon = 'favicon.ico'
 html_static_path = ['_static']
 html_theme = 'sphinx_rtd_theme'

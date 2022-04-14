@@ -1,1 +1,5 @@
-pip install letsdns
+# System-wide installation.
+sudo pip install letsdns
+
+# Alternative: Install for the current user only.
+# pip install --user letsdns

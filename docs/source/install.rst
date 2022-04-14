@@ -1,11 +1,10 @@
 Installation
 ============
 
-Recommended: Python package
----------------------------
+Python package
+--------------
 
-LetsDNS can be installed using the `Python Package Index`_. System-wide installation of Python packages usually requires
-*root* privileges.
+LetsDNS can be installed using the `Python Package Index`_.
 
 .. literalinclude:: _static/pip-install
 
@@ -19,6 +18,5 @@ such an environment from scratch. The following commands show how to invoke the 
 
 .. literalinclude:: _static/venv-install
 
-Before launching LetsDNS for the first time, you need to create a `configuration`_ file.
-
-.. _configuration: config.html
+Before launching LetsDNS for the first time, you need to create a configuration file. See the next documentation section
+for details.
