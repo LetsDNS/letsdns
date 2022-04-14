@@ -47,6 +47,7 @@ def is_truthy(something) -> bool:
 
 def getenv(name: str, default=None, debug_env=True):
     """Return environment variable value if available, otherwise return the default value.
+
     Args:
         name: Environment variable name.
         default: Default value.
