@@ -55,6 +55,7 @@ class TlsaTest(tests.TestCase):
         rc = self.update.execute(self.c, name='test', dataset=ds)
         self.assertEqual(0, rc)
 
+    @skipUnless(ENABLE_LIVEUPDATE_TESTS, 'online tests disabled')
     def test_bad_ttl(self):
         self.c.active_section = 'bad_ttl'
         rd = from_text(RdataClass.IN, RdataType.TLSA, tok='2 0 1 abcd')
