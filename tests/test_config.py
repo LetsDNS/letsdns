@@ -34,12 +34,13 @@ class ConfigurationTest(tests.TestCase):
         self.assertEqual(logging.FATAL, log_level())
 
     def test_dump(self):
-        conf = Config()
-        conf.init()
+        c = Config()
+        c.init()
         f = NamedTemporaryFile(mode='wt', delete=False)
-        conf.dump(f)
+        c.dump(f)
         f.close()
-        x = filecmp.cmp('dump-expected', f.name, shallow=False)
+        p = os.path.join(os.path.dirname(__file__), 'dump-expected')
+        x = filecmp.cmp(p, f.name, shallow=False)
         os.unlink(f.name)
         self.assertTrue(x, msg='Dumped content differs')
 
