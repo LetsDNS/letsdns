@@ -12,9 +12,9 @@
 #
 # You should have received a copy of the GNU General Public License along with LetsDNS.
 # If not, see <https://www.gnu.org/licenses/>.
+import filecmp
 import logging
 import os
-import subprocess
 from configparser import NoOptionError
 from tempfile import NamedTemporaryFile
 
@@ -39,9 +39,9 @@ class ConfigurationTest(tests.TestCase):
         f = NamedTemporaryFile(mode='wt', delete=False)
         conf.dump(f)
         f.close()
-        diff = subprocess.run(['diff', 'dump-expected', f.name])
+        x = filecmp.cmp('dump-expected', f.name, shallow=False)
         os.unlink(f.name)
-        self.assertEqual(0, diff.returncode)
+        self.assertTrue(x, msg='Dumped content differs')
 
     def test_get_domain(self):
         self.c.active_section = 'DEFAULT'
