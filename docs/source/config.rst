@@ -1,10 +1,9 @@
 Configuration
 =============
 
-Configuration data is specified using ``name = value`` pairs in
-INI-style text files. A detailed syntax_ description is available at
-Python.org. Please note that LetsDNS uses `extended interpolation`_ of
-values.
+Configuration data is specified using ``name = value`` pairs in INI-style text files. A detailed syntax_ description is
+available at Python.org. Please note that LetsDNS uses `extended interpolation`_ of values, and that entries in the
+[DEFAULT] configuration section are inherited by all other sections.
 
 .. _BIND 9: https://bind9.readthedocs.io/en/latest/
 .. _dynamic action: dynaction.html
@@ -22,14 +21,19 @@ horizontal dash).
 
 - action = *identifier*
 
-  One of the following identifiers must be specified:
+
+  LetsDNS "acts" on all all configuration sections which define an action.
+  This is the reason why I recommend **not** defining actions in the [DEFAULT]
+  section, unless it is the only section in your configuration set.
+
+  The following action identifiers are available:
 
   - dane-tlsa
 
     Create DANE TLSA records using the DNS Update protocol (see `RFC 2136`_).
     If your nameserver is running on the same machine as LetsDNS, or if it is
-    accessible over a network connection, using this action is usually the
-    most convenient way to publish DNS records.
+    accessible over a network connection, using this action is the recommend
+    and most convenient way to publish DNS records.
 
   - dynamic:*module.containing.YourActionClass*
 
