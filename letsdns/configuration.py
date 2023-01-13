@@ -1,4 +1,4 @@
-# Copyright © 2022 Ralph Seichter
+# Copyright © 2022-2023 Ralph Seichter
 #
 # This file is part of LetsDNS.
 #
