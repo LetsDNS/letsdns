@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.abspath('..'))
 author = 'Ralph Seichter'
 language = 'en'
 project = 'LetsDNS'
-project_copyright = '2022 Ralph Seichter'
+project_copyright = '2022-2023 Ralph Seichter'
 
 # The short X.Y version
 version = 'latest'
