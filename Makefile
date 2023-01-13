@@ -3,7 +3,7 @@
 PYPI_REPO	?= testpypi
 SED_INPLACE	?= /opt/local/bin/gsed -i''
 VENV		= $(shell realpath .venv)
-VERSION		?= $(shell echo "1.0.1.dev$$(date -u +'%j%H%M' | sed -e 's/^0//')")
+VERSION		?= $(shell echo "1.0.2.dev$$(date -u +'%j%H%M' | sed -e 's/^0//')")
 
 .PHONY:	clean dist help prep push pypi-upload setver
 
