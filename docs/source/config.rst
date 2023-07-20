@@ -85,6 +85,10 @@ horizontal dash).
   ``key "mykey" { algorithm hmac-sha256; secret "c2VjcmV0Cg=="; };``
   the matching JSON content is ``{"mykey": "c2VjcmV0Cg=="}``.
 
+- keyalgorithm = *hmac-sha256*
+
+  If keyfile is set define which key algorithm the TSIG key uses
+
 - nameserver = *hostname | ip-address*
 
   Host name or IP address for your nameserver. Name resolution is

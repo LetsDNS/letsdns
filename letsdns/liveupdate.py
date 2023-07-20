@@ -38,12 +38,13 @@ class DnsLiveUpdate(Action):
         """Update DNS record using the dnspython library. Return 0 to indicate success."""
         zone = conf.get_mandatory('domain')
         path = conf.get('keyfile')
+        keyalgorithm = conf.get('keyalgorithm', 'hmac-sha256')
         if path:
             with open(path, 'r') as f:
                 keyring = tsigkeyring.from_text(json.load(f))
         else:  # pragma: no cover
             keyring = None
-        update = Update(zone=zone, keyring=keyring)
+        update = Update(zone=zone, keyring=keyring, keyalgorithm=keyalgorithm)
         for port in conf.get_tcp_ports():
             name = record_name(conf, port)
             update.delete(name)
