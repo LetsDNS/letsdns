@@ -18,6 +18,7 @@ from logging import debug
 
 from dns import query
 from dns import rcode
+from dns import tsig
 from dns import tsigkeyring
 from dns.message import Message
 from dns.update import Update
@@ -37,13 +38,15 @@ class DnsLiveUpdate(Action):
     def execute(self, conf: Config, *args, **kwargs) -> int:
         """Update DNS record using the dnspython library. Return 0 to indicate success."""
         zone = conf.get_mandatory('domain')
+        keyalgorithm = conf.get('tsig-algorithm', tsig.default_algorithm)
         path = conf.get('keyfile')
         if path:
+            debug(f'Key file: {path} (TSIG algorithm: {keyalgorithm})')
             with open(path, 'r') as f:
                 keyring = tsigkeyring.from_text(json.load(f))
         else:  # pragma: no cover
             keyring = None
-        update = Update(zone=zone, keyring=keyring)
+        update = Update(zone=zone, keyalgorithm=keyalgorithm, keyring=keyring)
         for port in conf.get_tcp_ports():
             name = record_name(conf, port)
             update.delete(name)
