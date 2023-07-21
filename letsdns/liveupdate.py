@@ -38,7 +38,7 @@ class DnsLiveUpdate(Action):
     def execute(self, conf: Config, *args, **kwargs) -> int:
         """Update DNS record using the dnspython library. Return 0 to indicate success."""
         zone = conf.get_mandatory('domain')
-        keyalgorithm = conf.get('tsig-algorithm', tsig.default_algorithm)
+        keyalgorithm = conf.get('key_algorithm', tsig.default_algorithm)
         path = conf.get('keyfile')
         if path:
             debug(f'Key file: {path} (TSIG algorithm: {keyalgorithm})')
