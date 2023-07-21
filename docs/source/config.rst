@@ -6,6 +6,7 @@ available at Python.org. Please note that LetsDNS uses `extended interpolation`_
 [DEFAULT] configuration section are inherited by all other sections.
 
 .. _BIND 9: https://bind9.readthedocs.io/en/latest/
+.. _dnspython: https://dnspython.readthedocs.io/en/latest/
 .. _dynamic action: dynaction.html
 .. _extended interpolation: https://docs.python.org/3/library/configparser.html#interpolation-of-values
 .. _Hetzner DNS API: https://dns.hetzner.com/api-docs
@@ -84,6 +85,16 @@ horizontal dash).
   if your `BIND 9`_ nameserver permits access via
   ``key "mykey" { algorithm hmac-sha256; secret "c2VjcmV0Cg=="; };``
   the matching JSON content is ``{"mykey": "c2VjcmV0Cg=="}``.
+
+- key_algorithm = *algorithm-name*
+
+  TSIG algorithm used for the secret key. The specified name MUST be supported
+  by the `dnspython`_ library. Typical values are `hmac-sha256`, like in the
+  previous BIND 9 example, or `hmac-sha512`. If you do not specify this option,
+  the dnspython library will pick an internal default. This default may not match
+  your keyfile, possibly resulting in a dnspython error like "dns.tsig.PeerBadKey:
+  The peer didn't know the key we used". It is therefore recommended to explicitly
+  define an algorithm.
 
 - nameserver = *hostname | ip-address*
 
