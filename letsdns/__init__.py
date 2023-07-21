@@ -16,4 +16,4 @@ If not, see <https://www.gnu.org/licenses/>.
 """
 HOMEPAGE = 'https://letsdns.org/'
 IDENTIFIER = 'letsdns'
-VERSION = '1.0.2.dev131831'
+VERSION = '1.2.0'
