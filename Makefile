@@ -1,4 +1,4 @@
-# vim:ts=4:sw=4:noet
+# vim: ts=4 sw=4 noet
 
 SED_INPLACE	?= /opt/local/bin/gsed -i''
 VENV		= $(shell realpath .venv)

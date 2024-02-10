@@ -1,4 +1,4 @@
-# vim:ts=4:sw=4:noet
+# vim: ts=4 sw=4 noet
 
 RSYNC_OPTS		?= --compress --delete --ipv6 --recursive --rsh=ssh --times --verbose
 SED_INPLACE		?= /opt/local/bin/gsed -i''
@@ -7,9 +7,25 @@ SPHINX_OPTS		?=
 SPHINX_DEST		= build
 SPHINX_SOURCE	= source
 
-.PHONY:	Makefile apidoc cibuild help install-reqs publish
+define usage
+
+Available make targets are:
+
+  apidoc   Generate API documentation.
+  cibuild  CI build.
+  help     Display this text.
+  instreq  Install required Python packages.
+  publish  Publish generated documentation to web server.
+  sphelp   Display Sphinx help text.
+endef
+
+.PHONY:	Makefile apidoc cibuild help instreq publish sphelp
 
 help:
+	$(info $(usage))
+	@exit 0
+
+sphelp:
 	$(SPHINX_BUILD) -M help $(SPHINX_SOURCE) $(SPHINX_DEST) $(SPHINX_OPTS)
 
 apidoc:
@@ -17,13 +33,13 @@ apidoc:
 	rm $(SPHINX_SOURCE)/modules.rst
 	$(SED_INPLACE) -E -e 's/:(undoc-members:)/:no-\1/g' $(SPHINX_SOURCE)/*.rst
 
-cibuild:	install-reqs apidoc html
+cibuild:	instreq apidoc html
 
-install-reqs:
+instreq:
 	pip install -r ../requirements.txt
 
 publish:
-	rsync $(RSYNC_OPTS) $(SPHINX_DEST)/html/ letsdns.org:/var/www/letsdns
+	rsync $(RSYNC_OPTS) $(SPHINX_DEST)/html/ letsdns:/var/www/letsdns
 
 %:	Makefile
 	$(SPHINX_BUILD) -M $@ $(SPHINX_SOURCE) $(SPHINX_DEST) $(SPHINX_OPTS)
