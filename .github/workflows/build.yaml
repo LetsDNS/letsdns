@@ -53,5 +53,5 @@ jobs:
       - name: Store Python artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: LetsDNS-software
+          name: LetsDNS-Python-${{ matrix.python-version }}
           path: dist/*
