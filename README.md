@@ -6,4 +6,4 @@ or [certbot](https://eff-certbot.readthedocs.io).
 
 Documentation is available on the [LetsDNS homepage](https://letsdns.org/).
 
-Copyright © 2022-2023 Ralph Seichter. Hosted on [GitHub](https://github.com/LetsDNS/letsdns).
+Copyright © 2022-2024 Ralph Seichter. Hosted on [GitHub](https://github.com/LetsDNS/letsdns).

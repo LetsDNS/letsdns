@@ -1,5 +1,5 @@
 """
-Copyright © 2022-2023 Ralph Seichter
+Copyright © 2022-2024 Ralph Seichter
 
 This file is part of LetsDNS.
 
