@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# vim:ft=sh:ts=4:sw=4:noet
+# vim: ft=sh ts=4 sw=4 noet
 #
 # Install LetsDNS from scratch.
 
@@ -11,10 +11,10 @@ function die {
 }
 
 function usage {
-	die "Usage: $(basename ${0}) {destination-directory}"
+	die "Usage: $(basename "${0}") {destination-directory}"
 }
 
-function _install {
+function letsdns_install {
 	local d="${1}"
 	[ -d "${d}" ] && die "Directory ${d} already exists, exiting."
 	mkdir -p "${d}"
@@ -27,4 +27,4 @@ function _install {
 }
 
 [ $# -ge 1 ] || usage
-_install "${1}"
+letsdns_install "${1}"
