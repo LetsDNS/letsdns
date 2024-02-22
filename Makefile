@@ -1,22 +1,24 @@
 # vim: ts=4 sw=4 noet
 
-SED_INPLACE	?= /opt/local/bin/gsed -i''
-VENV		= $(shell realpath .venv)
-VERSION		?= $(shell echo "1.2.0.dev$$(date -u +'%j%H%M' | sed -e 's/^0//')")
+SEDI	?= /opt/local/bin/gsed -i''
+VENV	= $(shell realpath .venv)
+VERSION	?= $(shell echo "1.2.1.dev$$(date -u +'%j%H%M' | sed -e 's/^0//')")
 
 define usage
 
-Available make targets are:
+Available make targets:
 
   clean   Cleanup build artifacts.
   dist    Python distribution build.
   help    Display this text.
   push    Git push to all configured remotes.
   pypiup  Upload to PyPI.
+  schk    Shell script check.
   setver  Set application version.
+
 endef
 
-.PHONY:	clean dist help prep push pypiup setver
+.PHONY:	clean dist help prep push pypiup schk setver
 
 help:
 	$(info $(usage))
@@ -32,11 +34,14 @@ dist:
 	python -m build
 
 push:
-	@for r in $(shell git remote); do git push $$r; done
+	@for _r in $(shell git remote); do git push $$_r; done; unset _r
 
 pypiup:	prep
 	twine upload dist/*
 
+schk:
+	shellcheck -x scripts/*
+
 setver:
-	$(SED_INPLACE) -E -e "s/(^VERSION =).*/\1 '$(VERSION)'/" letsdns/__init__.py
-	$(SED_INPLACE) -E -e "s/(^version =).*/\1 $(VERSION)/" setup.cfg
+	$(SEDI) -E -e "s/(^VERSION =).*/\1 '$(VERSION)'/" letsdns/__init__.py
+	$(SEDI) -E -e "s/(^version =).*/\1 $(VERSION)/" setup.cfg
