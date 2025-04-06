@@ -1,5 +1,5 @@
 # vim: ft=yaml ts=2 sw=2 et
-
+---
 name: LetsDNS project workflow
 on: push
 env:
@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.13'
 
       - name: Generate documentation
         run: make -C docs cibuild SED_IE="sed -i'' -E"
@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
+        python-version: ['3.9', '3.13']
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
