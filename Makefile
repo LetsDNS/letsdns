@@ -11,7 +11,6 @@ Available make targets:
   clean   Cleanup build artifacts.
   dist    Python distribution build.
   help    Display this text.
-  push    Git push to all configured remotes.
   pypiup  Upload to PyPI.
   schk    Shell script check.
   setver  Set application version.
@@ -21,7 +20,7 @@ Example usage:
   make setver ver=$(shell echo "1.2.2.dev$$(date +'%j' | sed -E 's/^0+//')")
 endef
 
-.PHONY:	clean dist help prep push pypiup schk setver
+.PHONY:	clean dist help prep pypiup schk setver
 
 help:
 	$(info $(usage))
@@ -35,9 +34,6 @@ clean:
 
 dist:
 	python -m build
-
-push:
-	@for _r in $(shell git remote); do git push $$_r; done; unset _r
 
 pypiup:	prep
 	twine upload dist/*
