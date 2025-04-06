@@ -16,7 +16,7 @@ jobs:
           python-version: '3.12'
 
       - name: Generate documentation
-        run: make -C docs cibuild SED_INPLACE="sed -i''"
+        run: make -C docs cibuild SED_IE="sed -i'' -E"
 
       - name: Store documentation artifacts
         uses: actions/upload-artifact@v4

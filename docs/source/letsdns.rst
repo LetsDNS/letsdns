@@ -9,77 +9,77 @@ letsdns.action module
 
 .. automodule:: letsdns.action
    :members:
-   :no-undoc-members:
    :show-inheritance:
+   :no-undoc-members:
 
 letsdns.configuration module
 ----------------------------
 
 .. automodule:: letsdns.configuration
    :members:
-   :no-undoc-members:
    :show-inheritance:
+   :no-undoc-members:
 
 letsdns.core module
 -------------------
 
 .. automodule:: letsdns.core
    :members:
-   :no-undoc-members:
    :show-inheritance:
+   :no-undoc-members:
 
 letsdns.crypto module
 ---------------------
 
 .. automodule:: letsdns.crypto
    :members:
-   :no-undoc-members:
    :show-inheritance:
+   :no-undoc-members:
 
 letsdns.hetznerapi module
 -------------------------
 
 .. automodule:: letsdns.hetznerapi
    :members:
-   :no-undoc-members:
    :show-inheritance:
+   :no-undoc-members:
 
 letsdns.liveupdate module
 -------------------------
 
 .. automodule:: letsdns.liveupdate
    :members:
-   :no-undoc-members:
    :show-inheritance:
+   :no-undoc-members:
 
 letsdns.nsupdate module
 -----------------------
 
 .. automodule:: letsdns.nsupdate
    :members:
-   :no-undoc-members:
    :show-inheritance:
+   :no-undoc-members:
 
 letsdns.tlsa module
 -------------------
 
 .. automodule:: letsdns.tlsa
    :members:
-   :no-undoc-members:
    :show-inheritance:
+   :no-undoc-members:
 
 letsdns.util module
 -------------------
 
 .. automodule:: letsdns.util
    :members:
-   :no-undoc-members:
    :show-inheritance:
+   :no-undoc-members:
 
 Module contents
 ---------------
 
 .. automodule:: letsdns
    :members:
-   :no-undoc-members:
    :show-inheritance:
+   :no-undoc-members:

@@ -1,7 +1,7 @@
 # vim: ts=4 sw=4 noet
 
 RSYNC_OPTS		?= --compress --delete --ipv6 --recursive --rsh=ssh --times --verbose
-SED_INPLACE		?= /opt/local/bin/gsed -i''
+SED_IE			?= sed -i "" -E
 SPHINX_BUILD	?= env PYTHONPATH=.. sphinx-build
 SPHINX_OPTS		?=
 SPHINX_DEST		= build
@@ -31,7 +31,7 @@ sphelp:
 apidoc:
 	sphinx-apidoc --force --output-dir $(SPHINX_SOURCE) ../letsdns
 	rm $(SPHINX_SOURCE)/modules.rst
-	$(SED_INPLACE) -E -e 's/:(undoc-members:)/:no-\1/g' $(SPHINX_SOURCE)/*.rst
+	$(SED_IE) 's/:(undoc-members:)/:no-\1/g' $(SPHINX_SOURCE)/*.rst
 
 cibuild:	instreq apidoc html
 
