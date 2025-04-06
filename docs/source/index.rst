@@ -10,7 +10,7 @@ invoked manually, from a periodic cron job, or called in a hook function of `deh
 .. _dehydrated: https://dehydrated.io
 .. _GitHub: https://github.com/LetsDNS/letsdns
 
-Copyright © 2022-2024 Ralph Seichter. Hosted on `GitHub`_.
+Copyright © 2022-2025 Ralph Seichter. Hosted on `GitHub`_.
 
 .. toctree::
     :maxdepth: 3
