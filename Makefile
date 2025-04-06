@@ -1,8 +1,8 @@
 # vim: ts=4 sw=4 noet
 
-SEDI	?= /opt/local/bin/gsed -i''
+SEDI	?= sed -i "" -E
 VENV	= $(shell realpath .venv)
-VERSION	?= $(shell echo "1.2.1.dev$$(date -u +'%j%H%M' | sed -e 's/^0//')")
+ver		?= $(shell echo "1.2.1.dev$$(date -u +'%j%H%M' | sed -e 's/^0//')")
 
 define usage
 
@@ -16,6 +16,9 @@ Available make targets:
   schk    Shell script check.
   setver  Set application version.
 
+Example usage:
+
+  make setver ver=$(shell echo "1.2.2.dev$$(date +'%j' | sed -E 's/^0+//')")
 endef
 
 .PHONY:	clean dist help prep push pypiup schk setver
@@ -43,5 +46,5 @@ schk:
 	shellcheck -x scripts/*
 
 setver:
-	$(SEDI) -E -e "s/(^VERSION =).*/\1 '$(VERSION)'/" letsdns/__init__.py
-	$(SEDI) -E -e "s/(^version =).*/\1 $(VERSION)/" setup.cfg
+	$(SEDI) "s/(^VERSION =).*/\1 '$(ver)'/" letsdns/__init__.py
+	$(SEDI) "s/(^version =).*/\1 $(ver)/" setup.cfg

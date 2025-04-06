@@ -1,5 +1,5 @@
 """
-Copyright © 2022-2024 Ralph Seichter
+Copyright © 2022-2025 Ralph Seichter
 
 This file is part of LetsDNS.
 
@@ -14,6 +14,6 @@ General Public License for more details.
 You should have received a copy of the GNU General Public License along with LetsDNS.
 If not, see <https://www.gnu.org/licenses/>.
 """
-HOMEPAGE = 'https://letsdns.org/'
+HOMEPAGE = 'https://www.letsdns.de/'
 IDENTIFIER = 'letsdns'
-VERSION = '1.2.1.dev530510'
+VERSION = '1.2.1'

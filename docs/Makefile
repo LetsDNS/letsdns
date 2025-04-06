@@ -39,7 +39,7 @@ instreq:
 	pip install -r ../requirements.txt
 
 publish:
-	rsync $(RSYNC_OPTS) $(SPHINX_DEST)/html/ letsdns:/var/www/letsdns
+	rsync $(RSYNC_OPTS) $(SPHINX_DEST)/html/ seichter@ra:/var/www/letsdns
 
 %:	Makefile
 	$(SPHINX_BUILD) -M $@ $(SPHINX_SOURCE) $(SPHINX_DEST) $(SPHINX_OPTS)
