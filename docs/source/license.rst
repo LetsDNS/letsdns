@@ -1,7 +1,7 @@
 License
 =======
 
-Copyright © 2022-2025 Ralph Seichter
+Copyright © 2022-2026 Ralph Seichter
 
 This file is part of LetsDNS.
 
