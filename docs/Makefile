@@ -1,7 +1,7 @@
 # vim: ts=4 sw=4 noet
 
 RSYNC_OPTS		?= --compress --delete --ipv6 --recursive --rsh=ssh --verbose
-SED_IE			?= sed -i "" -E
+SED_IE			?= sed -i"" -E
 SPHINX_BUILD	?= env PYTHONPATH=.. sphinx-build
 SPHINX_OPTS		?=
 SPHINX_DEST		= build
@@ -39,7 +39,7 @@ instreq:
 	pip install -r ../requirements.txt
 
 publish:
-	rsync $(RSYNC_OPTS) $(SPHINX_DEST)/html/ seichter@ra:/var/www/letsdns
+	rsync $(RSYNC_OPTS) $(SPHINX_DEST)/html/ ralph@naja:/var/www/letsdns
 
 %:	Makefile
 	$(SPHINX_BUILD) -M $@ $(SPHINX_SOURCE) $(SPHINX_DEST) $(SPHINX_OPTS)
