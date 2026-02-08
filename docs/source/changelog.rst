@@ -1,6 +1,14 @@
 Changelog
 =========
 
+1.2.2 (2026-02-08):
+
+* Maintenance: Python 3.14 build.
+
+1.2.1 (2025-04-06):
+
+* Maintenance: Python 3.13 build.
+
 1.2.0 (2023-07-22):
 
 * Enhancement: Support various TSIG key algorithms via the new `key_algorithm`
