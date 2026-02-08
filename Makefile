@@ -1,6 +1,6 @@
 # vim: ts=4 sw=4 noet
 
-SEDI	?= sed -i "" -E
+SEDI	?= sed -i"" -E
 VENV	= $(shell realpath .venv)
 ver		?= $(shell echo "1.2.1.dev$$(date -u +'%j%H%M' | sed -e 's/^0//')")
 
